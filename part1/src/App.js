@@ -2,6 +2,7 @@
 import './App.css';
 import {useState} from 'react'
 
+
 // linter 끄기 
 /* eslint-disable */
 
@@ -184,6 +185,10 @@ function App() {
 
 
 
+      <Profile/>
+
+
+
     </div>
   );
 }
@@ -208,3 +213,53 @@ function Modal(props){
 }
 
 export default App;
+
+
+
+
+
+// 구버전 React
+//
+import React from 'react';
+
+class Profile extends React.Component {
+  
+  constructor(){
+    super()
+    // state 만들기
+    this.state = {
+      title : ["서울", "경기"],
+      like : [10, 23]
+    }
+  }
+
+  changeLikes(){
+    this.setState({like:[20, 43]})
+  }
+
+  changeLikes2 = () => {
+    this.setState({like:[20, 43]})
+  }
+
+  render(){
+    return (
+      <div>
+        새로운 컴포넌트
+        {/* state를 쓸 때 this.state 를 앞에 붙여야한다. */}
+        <h3>여기는 {this.state.title[0]}입니다.</h3>
+        <h3> 👍 {this.state.like[0]}</h3>
+
+        <button onClick={ ()=>{ this.setState({title:["서울시", "경기도"]}) } }>지역 변경</button>
+        <button onClick={ this.changeLikes.bind(this) } >좋아요 변경</button>
+        <button onClick={ this.changeLikes2 } >좋아요 변경2</button>
+        {/* this 바인딩 */}
+        {/* 하기 싫으면 arrow function -> 상위 this를 그대로 사용함 */}
+      </div>
+    )
+  }
+
+  // state를 set해도 key별로 데이터를 관리하기 때문에 다른 키에는 영향을 주지 않음 (내름 장잠)
+  // 다만, 그 이외에는 구 버전은 사용하기에 복잡함
+  // 대부분 함수 형태로 짜는 것을 권장
+
+}
