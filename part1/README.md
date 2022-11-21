@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# React Part 1
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 01. 리엑트 시작하기
 
-## Available Scripts
+### 프로젝트 생성
 
-In the project directory, you can run:
+- 프로젝트 Boilerplate 생성 명령어
+```bash
+$ npx create-react-app <앱 이름>
+```
 
-### `npm start`
+- 시작
+```bash
+$ yarn start
+# 혹은
+$ npm start
+```
+- 보통 `http://localhost:3000` 으로 호스팅됨
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 프로젝트 구조
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- `index.js`에서 `App.js` 내용을 `i ndex.html`로 뿌려줌 
+- `public`: static 파일들, 빌드 시 원형으로 남음
+- `App.js`, `App.css`: 메인 코드
 
-### `npm test`
+<br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 02. JSX
 
-### `npm run build`
+- 기존의 JS 문법과 살짝 다른 것이 있음.
+- `index.js`에 `document.getElementById('root')`를 통해 index.html에 랜더링해줌
+- `index.html`에 `<div id="root"></div>` 태그 존재
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### JSX 알아보기
+```jsx
+import React from 'react';
+import './App.css'; // css 파일로 스타일링 가능
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+function App() {
+  return (
+    // class 대신 className을 써야 함
+    // JSX class 문법과 중복
+    <div className="App">
+      <b>안녕하세요~</b>
+    </div>
+  );
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export default App
+```
 
-### `npm run eject`
+### Data Binding이 매우 쉬움!
+- 받아온 데이터를 UI와 연결시키는 과정이 용이함!
+- `getElementById().innerHtml()` 이런 식으로 직접 바인딩할 필요가 없음!
+- 아래와 같이 변수를 직접 할당 가능함
+```jsx
+function App() {
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  let title = "제목!!";
+  function printTitle() {
+    return "제목입니당";
+  }
+  let imgSrc = "./~~~~/~~~~.png"
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  return (
+    <div className="App">
+      <div className="Header">
+        
+        {/* 중괄호로 변수 혹은 함수 랜더링이 가능!! */}
+        <h2>{ title }</h2>
+        <h2>{ printTitle() }</h2>
+        
+        {/* 속성(className, height, href 등등) 에도 작성 가능!! */}
+        <img src={ imgSrc } >
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+      </div>
+    </div>
+  );
+}
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### JSX에 style 속성 집어넣을 때
+```jsx
 
-## Learn More
+let customStyle = {color: 'blue', fontSize: '30px'}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+return (
+  <div className="App">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    {/* 이런 식으로 obj 형태로 만들어서 넣어야 함! */}
+    <div className="Header1" style={ {color: 'blue', fontSize: '30px'} }>
+      asdf
+    </div>
 
-### Code Splitting
+    {/* 이것도 가능!! */}
+    <div className="Header2" style={ customStyle }>
+      asdf
+    </div>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+  </div>
+)
+```
 
-### Analyzing the Bundle Size
+<br>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 03. state
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
