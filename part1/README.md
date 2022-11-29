@@ -209,12 +209,12 @@ return (
 - 중괄호 안에는 즉시 실행가능한 표현만 가능하다 (**IIFE** - Immediately Invoked Function Expressions)
 - 중괄호 안에 일반적인 함수처럼 사용하는 것은 불가능!!
   - ```jsx
-    {/*❌*/} ⭐️
+    {/* ❌ */} ⭐️
     <div className="header">HEAD</div>
     { () => {console.log("실행실행")} }
     ```
   - ```jsx
-    {/*⭕️*/}
+    {/* ⭕️ */}
     <div className="header">HEAD</div>
     { (() => {console.log("실행실행")})() }
     ```
@@ -328,7 +328,7 @@ function Modal() {
 
 <br>
 
-## 07. 특정 조건에 따른 UI 리랜더링
+## 07. UI 상태
 
 ### 특정 조건에서만 컴포넌트 / 특정 태그 띄우기
 - 04장에서 언급했듯이, JSX에서는 IIFE만 활용이 가능!!
@@ -365,8 +365,205 @@ return (
 );
 ```
 
+### UI 상태관리
+- `let [isOnClick, setIsOnClick] = useState(false);` → 특정 UI의 상태도 state로 저장한다!
+
 <br>
 
 ## 08. UI에서의 반복문
 
+### 반복되는 UI
+- 리스트 같이 데이터에 따라 변화하고, 반복되는 부분을 짤 때
+- `for`문은 못쓰고
+- `map()`을 활용하면 용이하게 짤 수 있음!!
+  - map에 의해 생성되는 child의 경우 `key` attr.를 넣는게 권장!
+### map 함수
+- `let 새_배열 = (배열).map( (엘리먼트, 인덱스) => { 실행문 } )`
+- 변수에 새로운 배열이 생김!
 
+```jsx
+let [title, changeTitle] = useState(["111", "222", "333"])
+
+return (
+  <div className="App">
+
+    {
+      title.map((item, index) => {
+        return (
+          <div className="list" key={index}>
+            <h3>` { item } <span onClick={ () => { addLikesByIdx(index) } } >👍</span> { likes } </h3>
+            <p>2월 17일 발행</p>
+            <hr/>
+          </div>
+        )
+      })
+    }
+    
+  </div>
+);
+```
+
+### IIFE 활용
+```jsx
+return (
+  <div className="App">
+
+    {
+      (() => {
+        let arr = []
+        for (let i = 0; i < 10; i++){
+          arr.push(<div>Hello!</div>)
+        }
+      })()
+      // 위에 소괄호 → 즉시실행 의미!!
+      // 위와 같은 형식 말고 위에 함수를 JSX 외부로 빼고, {} 안에서 실행만 해줘도 가능!
+      // ex> { makeHello() }
+    }
+
+  </div>
+);
+```
+
+<br>
+
+## 09. Props, 10. 모달 완성하기
+
+### Props를 쓰는 이유
+- 함수 scope 단위로 변수가 관리됨
+- 따라서, 컴포넌트 간 변수 공유가 안됨!
+- 부모에서 자식 컴포넌트로 데이터를 전송할 때 props를 활용하면 됨!
+
+### Props로 데이터 넘겨보기
+- 부모: `<컴포넌트이름 프롭이름={값} />`
+- 자식: `props` 파라미터로 받으면 `Object(==dict) 타입`으로 사용이 가능함!
+```jsx
+function App() {
+  let [title, setTitle] = useState(["111", "222", "333"])
+
+  return (
+    <div className="App">
+
+      {
+        title.map( (item, index) => <Modal title={item} likes={likes[index]} idx={index} addLikesByIdx={addLikesByIdx} />)
+      }
+      
+
+    </div>
+  );
+}
+
+function Modal(props) {
+  <>
+    <div className="list">
+      <h3> { props.title } <span onClick={ () => { props.addLikesByIdx(idx.index) } } >👍</span> { likes } </h3>
+      <p>2월 17일 발행</p>
+      <hr/>
+    </div>
+  </>
+}
+```
+
+<br>
+
+## 11. input
+
+### input 태그 사용 시 주의점
+- JSX의 모든 태그는 반드시 끝나야 함!!
+  - `img`, `input` 등
+- React에서는 `onChange`, `onInput` 동일하게 동작함
+
+```jsx
+function App() {
+  let [inputValue, setInputValue] = useState("입력값")
+
+  return (
+    <div className="App">
+      <div>{inputValue}</div>
+      <input onChange={ (event) => { setInputValue(event.target.value) } }/>
+    </div>
+  );
+}
+```
+
+<br>
+
+## 12. 글을 생성해보기
+
+### How?
+- 특정 state에 입력창 정보를 담아둠
+- 데이터를 담고 있는 state에 push로 새로운 데이터를 추가!
+- 위의 과정을 **한번에 처리하는 함수를 제작**해서 버튼에 onClick에 바인딩하기!
+
+<br>
+
+## 13. (참고) 이전 세대의 React 문법
+
+### 컴포넌트 생성하는 방법
+- function이 아닌 class를 사용했었음
+
+```jsx
+import React from "react";
+
+class Profile extends React.Component {
+  constructor() {
+    super();
+  }
+
+  render() {
+    return (
+      <div>
+        새로운 컴포넌트
+      </div>
+    );
+  }
+}
+```
+
+### state 생성하기
+
+```jsx
+constructor() {
+  super();
+  // state 만들기
+  this.state = {
+    title: ["서울", "경기"],
+    like: [10, 23],
+  };
+}
+```
+
+### state 사용하기 & 함수 만들기
+
+```jsx
+// JSX
+render() {
+  return (
+    <div>
+      새로운 컴포넌트
+      {/* state를 쓸 때 this.state 를 앞에 붙여야한다. */} ⭐️
+      <h3>여기는 {this.state.title[0]}입니다.</h3>
+      <h3> 👍 {this.state.like[0]}</h3>
+
+      {/* state 변경 */}
+      <button onClick={ () => {this.setState({ title: ["서울시", "경기도"] });} } >
+        지역 변경
+      </button>
+
+      <button onClick={this.changeLikes.bind(this)}>좋아요 변경</button>
+      <button onClick={this.changeLikes2}>좋아요 변경2</button>
+      {/* this 바인딩 */} ⭐️
+      {/* !!! 하기 싫으면 arrow function -> 상위 this를 그대로 사용함 */} ⭐️
+    </div>
+  );
+}
+
+// 함수 선언
+changeLikes() {
+  this.setState({ like: [20, 43] });
+}
+// bind(this) 하기 싫으면 arrow function -> 상위 this를 그대로 사용함
+// 구 문법 단점
+changeLikes2 = () => {
+  this.setState({ like: [20, 43] });
+};
+```
