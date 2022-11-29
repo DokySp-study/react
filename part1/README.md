@@ -282,3 +282,91 @@ return (
 <br>
 
 ## 06. Component
+
+### 컴포넌트란?
+- JSX 뭉치로 생각하면 됨
+- `App()`도 컴포넌트의 일종
+- 컴포넌트의 반환값에는 반드시 하나의 태그만 있어야 함!!
+  - `Fragment` 태그(`<>``</>`)를 사용해서 처리해도 됨.
+
+```jsx
+function App() {
+  return (
+    <div className="App">
+
+      <div className="list">
+        <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
+        <p>2월 17일 발행</p>
+        <hr/>
+      </div>
+      
+      {/* 이런 식으로 컴포넌트를 활용! */}
+      <Modal/>
+
+    </div>
+  );
+}
+
+{/* App()과 동일하게 컴포넌트 만들면 됨 */}
+function Modal() {
+  <>
+    <div>만든 사람: OOO</div>
+    <div>최근 업데이트: OOOO</div>
+  </>
+}
+```
+
+### 어떤 경우에 컴포넌트를 만드는 것이 좋을까?
+- 반복적으로 사용되는 (→재사용 시 이점이 큰) UI (ex> 버튼, 로그인 창 등)
+- 자주 변경되는 UI → 리랜더링 시 랜더링 범위를 줄여 효율이 좋아짐
+- 페이지 단위로 분리할 때
+- Dart와 비슷한 느낌으로 봐도 됨!
+
+### 컴포넌트 파편화 시 단점
+- `state`를 부모에서 자식으로 내릴 때, props를 사용하는데 이때문에 번거로워질 수 있음.
+- 추후 `Redux` 같은 것으로 해결 가능하긴 함
+
+<br>
+
+## 07. 특정 조건에 따른 UI 리랜더링
+
+### 특정 조건에서만 컴포넌트 / 특정 태그 띄우기
+- 04장에서 언급했듯이, JSX에서는 IIFE만 활용이 가능!!
+- 따라서 `if-else`문을 활용할 수 없다!
+- 대신 `삼항연산자`(`<조건식> ? <True> : <False>`)를 사용하면 가능!
+
+```jsx
+let [isOnClick, setIsOnClick] = useState(false)
+
+function addLikesByIdx(idx){
+  var newArr = [...likes]
+  newArr[idx] += 1
+  setLikes(newArr)
+  setIsOnClick(true)
+}
+
+return (
+  <div className="App">
+
+    <div className="list">
+      <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
+      <p>2월 17일 발행</p>
+      <hr/>
+    </div>
+    
+    {/* 태그로 JS 표현식 느낌 */}
+    {/* 이런 식으로 작성 가능! */}
+    (isOnClick === true)
+    ? <Modal/>
+    : null
+    {/* null을 쓰면 아무것도 표시하지 않는다는 것을 의미! */}
+
+  </div>
+);
+```
+
+<br>
+
+## 08. UI에서의 반복문
+
+
