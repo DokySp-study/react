@@ -5,16 +5,16 @@
 ### 프로젝트 생성
 
 - 프로젝트 Boilerplate 생성 명령어
-```bash
-$ npx create-react-app <앱 이름>
-```
+  ```bash
+  $ npx create-react-app <앱 이름>
+  ```
 
 - 시작
-```bash
-$ yarn start
-# 혹은
-$ npm start
-```
+  ```bash
+  $ yarn start
+  # 혹은
+  $ npm start
+  ```
 - 보통 `http://localhost:3000` 으로 호스팅됨
 
 ### 프로젝트 구조
@@ -62,31 +62,31 @@ export default App
 - 받아온 데이터를 UI와 연결시키는 과정이 용이함!
 - `getElementById().innerHtml()` 이런 식으로 직접 바인딩할 필요가 없음!
 - 아래와 같이 변수를 직접 할당 가능함
-```jsx
-function App() {
+  ```jsx
+  function App() {
 
-  let title = "제목!!";
-  function printTitle() {
-    return "제목입니당";
-  }
-  let imgSrc = "./~~~~/~~~~.png"
+    let title = "제목!!";
+    function printTitle() {
+      return "제목입니당";
+    }
+    let imgSrc = "./~~~~/~~~~.png"
 
-  return (
-    <div className="App">
-      <div className="Header">
-        
-        {/* 중괄호로 변수 혹은 함수 랜더링이 가능!! */}
-        <h2>{ title }</h2>
-        <h2>{ printTitle() }</h2>
-        
-        {/* 속성(className, height, href 등등) 에도 작성 가능!! */}
-        <img src={ imgSrc } >
+    return (
+      <div className="App">
+        <div className="Header">
+          
+          {/* 중괄호로 변수 혹은 함수 랜더링이 가능!! */}
+          <h2>{ title }</h2>
+          <h2>{ printTitle() }</h2>
+          
+          {/* 속성(className, height, href 등등) 에도 작성 가능!! */}
+          <img src={ imgSrc } >
 
+        </div>
       </div>
-    </div>
-  );
-}
-```
+    );
+  }
+  ```
 
 ### JSX에 style 속성 집어넣을 때
 ```jsx
@@ -125,30 +125,30 @@ return (
   - state 값
   - state 값을 **변경할 수 있는 함수**
 
-```jsx
-// 내장함수 임포트
-import React, { useState } from 'react';
+  ```jsx
+  // 내장함수 임포트
+  import React, { useState } from 'react';
 
-function App() {
+  function App() {
 
-  // 새로운 state를 생성하기!
-  let [title, changeTitle] = useState("남자 코트 맛집");
-  // [ state data, state modify func. ]
-  // ES6 문법; Destructuring
+    // 새로운 state를 생성하기!
+    let [title, changeTitle] = useState("남자 코트 맛집");
+    // [ state data, state modify func. ]
+    // ES6 문법; Destructuring
 
-  return (
-    <div className="App">
+    return (
+      <div className="App">
 
-      <div className="list">
-        <h3> { title } </h3>
-        <p>2월 17일 발행</p>
-        <hr/>
+        <div className="list">
+          <h3> { title } </h3>
+          <p>2월 17일 발행</p>
+          <hr/>
+        </div>
+
       </div>
-
-    </div>
-  );
-}
-```
+    );
+  }
+  ```
 
 ### Destructuring
 - ES6 문법
@@ -164,37 +164,37 @@ function App() {
 - `onClick = { 함수 주소값 }`
   - ES6 문법; Arrow Function 사용해도 됨
 
-```jsx
-let [title, changeTitle] = useState(["111", "111", "111"])
-let [likes, changeLikes] = useState(0)
+  ```jsx
+  let [title, changeTitle] = useState(["111", "111", "111"])
+  let [likes, changeLikes] = useState(0)
 
-return (
-  <div className="App">
+  return (
+    <div className="App">
 
-    <div className="list">
-      {/* 이런 식으로 onClick 안에 넣으면 됨 */}
-      {/* 단, 무조건 함수의 주소값 형태 만을 넣어야 한다!! (실행 구문 X) */}
-      <h3> { title[0] } <span onClick={ () => { changeLikes(likes + 1) } } >👍</span> { likes } </h3>
-      <p>2월 17일 발행</p>
-      <hr/>
+      <div className="list">
+        {/* 이런 식으로 onClick 안에 넣으면 됨 */}
+        {/* 단, 무조건 함수의 주소값 형태 만을 넣어야 한다!! (실행 구문 X) */}
+        <h3> { title[0] } <span onClick={ () => { changeLikes(likes + 1) } } >👍</span> { likes } </h3>
+        <p>2월 17일 발행</p>
+        <hr/>
+      </div>
+
     </div>
-
-  </div>
-);
-```
+  );
+  ```
 
 ### state 변경 ⭐️⭐️
 - onClick = { likes = likes + 1 }
   - 이렇게 쓰면 아무 일도 일어나지 않는다! → **리랜더링이 되지 않기 때문!!**
 - 따라서 `changeLikes(변경할 값)`를 사용해야 한다!
 
-```jsx
-<div className="list">
-  <h3> { title[0] } <span onClick={ () => { changeLikes(likes + 1) } } >👍</span> { likes } </h3>
-  <p>2월 17일 발행</p>
-  <hr/>
-</div>
-```
+  ```jsx
+  <div className="list">
+    <h3> { title[0] } <span onClick={ () => { changeLikes(likes + 1) } } >👍</span> { likes } </h3>
+    <p>2월 17일 발행</p>
+    <hr/>
+  </div>
+  ```
 
 ### Arrow Function
 - ES6 문법
@@ -208,16 +208,16 @@ return (
 ### IIFE
 - 중괄호 안에는 즉시 실행가능한 표현만 가능하다 (**IIFE** - Immediately Invoked Function Expressions)
 - 중괄호 안에 일반적인 함수처럼 사용하는 것은 불가능!!
-  - ```jsx
-    {/* ❌ */} ⭐️
-    <div className="header">HEAD</div>
-    { () => {console.log("실행실행")} }
-    ```
-  - ```jsx
-    {/* ⭕️ */}
-    <div className="header">HEAD</div>
-    { (() => {console.log("실행실행")})() }
-    ```
+  ```jsx
+  {/* ❌ */} ⭐️
+  <div className="header">HEAD</div>
+  { () => {console.log("실행실행")} }
+  ```
+  ```jsx
+  {/* ⭕️ */}
+  <div className="header">HEAD</div>
+  { (() => {console.log("실행실행")})() }
+  ```
 - 참고: [https://m.blog.naver.com/dudghsy/221483589372](https://m.blog.naver.com/dudghsy/221483589372)
   - TODO: 좀 더 조사해보기
 
@@ -235,40 +235,40 @@ return (
   - 리랜더링이 되지 않을 수도 있음!! (래퍼런스가 꼬이는 문제인듯?)
   - Deep copy를 해서 변경해서 사용하는 것을 권장
 
-```jsx
-let [title, setTitle] = useState(["111", "111", "111"])
-let [likes, setLikes] = useState([0, 0, 0])
+  ```jsx
+  let [title, setTitle] = useState(["111", "111", "111"])
+  let [likes, setLikes] = useState([0, 0, 0])
 
-function addLikesByIdx(idx){
-  // ⚠️
-  // likes[idx] += 1
+  function addLikesByIdx(idx){
+    // ⚠️
+    // likes[idx] += 1
 
-  // Deepcopy ⭐️⭐️⭐️
-  // 1) 이런 식으로도 가능
-  // var newArr = []
-  // for (var i of likes){
-  //   newArr.push(i)
-  // }
+    // Deepcopy ⭐️⭐️⭐️
+    // 1) 이런 식으로도 가능
+    // var newArr = []
+    // for (var i of likes){
+    //   newArr.push(i)
+    // }
 
-  // 2) Spread Operator
-  var newArr = [...likes]
-  newArr[idx] += 1
+    // 2) Spread Operator
+    var newArr = [...likes]
+    newArr[idx] += 1
 
-  setLikes(newArr)
-}
+    setLikes(newArr)
+  }
 
-return (
-  <div className="App">
+  return (
+    <div className="App">
 
-    <div className="list">
-      <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
-      <p>2월 17일 발행</p>
-      <hr/>
+      <div className="list">
+        <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
+        <p>2월 17일 발행</p>
+        <hr/>
+      </div>
+
     </div>
-
-  </div>
-);
-```
+  );
+  ```
 
 ### Spread Operator
 - ES6 문법
@@ -289,32 +289,32 @@ return (
 - 컴포넌트의 반환값에는 반드시 하나의 태그만 있어야 함!!
   - `Fragment` 태그(`<>``</>`)를 사용해서 처리해도 됨.
 
-```jsx
-function App() {
-  return (
-    <div className="App">
+  ```jsx
+  function App() {
+    return (
+      <div className="App">
 
-      <div className="list">
-        <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
-        <p>2월 17일 발행</p>
-        <hr/>
+        <div className="list">
+          <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
+          <p>2월 17일 발행</p>
+          <hr/>
+        </div>
+        
+        {/* 이런 식으로 컴포넌트를 활용! */}
+        <Modal/>
+
       </div>
-      
-      {/* 이런 식으로 컴포넌트를 활용! */}
-      <Modal/>
+    );
+  }
 
-    </div>
-  );
-}
-
-{/* App()과 동일하게 컴포넌트 만들면 됨 */}
-function Modal() {
-  <>
-    <div>만든 사람: OOO</div>
-    <div>최근 업데이트: OOOO</div>
-  </>
-}
-```
+  {/* App()과 동일하게 컴포넌트 만들면 됨 */}
+  function Modal() {
+    <>
+      <div>만든 사람: OOO</div>
+      <div>최근 업데이트: OOOO</div>
+    </>
+  }
+  ```
 
 ### 어떤 경우에 컴포넌트를 만드는 것이 좋을까?
 - 반복적으로 사용되는 (→재사용 시 이점이 큰) UI (ex> 버튼, 로그인 창 등)
@@ -335,35 +335,35 @@ function Modal() {
 - 따라서 `if-else`문을 활용할 수 없다!
 - 대신 `삼항연산자`(`<조건식> ? <True> : <False>`)를 사용하면 가능!
 
-```jsx
-let [isOnClick, setIsOnClick] = useState(false)
+  ```jsx
+  let [isOnClick, setIsOnClick] = useState(false)
 
-function addLikesByIdx(idx){
-  var newArr = [...likes]
-  newArr[idx] += 1
-  setLikes(newArr)
-  setIsOnClick(true)
-}
+  function addLikesByIdx(idx){
+    var newArr = [...likes]
+    newArr[idx] += 1
+    setLikes(newArr)
+    setIsOnClick(true)
+  }
 
-return (
-  <div className="App">
+  return (
+    <div className="App">
 
-    <div className="list">
-      <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
-      <p>2월 17일 발행</p>
-      <hr/>
+      <div className="list">
+        <h3> { title[0] } <span onClick={ () => { addLikesByIdx(0) } } >👍</span> { likes } </h3>
+        <p>2월 17일 발행</p>
+        <hr/>
+      </div>
+      
+      {/* 태그로 JS 표현식 느낌 */}
+      {/* 이런 식으로 작성 가능! */}
+      (isOnClick === true)
+      ? <Modal/>
+      : null
+      {/* null을 쓰면 아무것도 표시하지 않는다는 것을 의미! */}
+
     </div>
-    
-    {/* 태그로 JS 표현식 느낌 */}
-    {/* 이런 식으로 작성 가능! */}
-    (isOnClick === true)
-    ? <Modal/>
-    : null
-    {/* null을 쓰면 아무것도 표시하지 않는다는 것을 의미! */}
-
-  </div>
-);
-```
+  );
+  ```
 
 ### UI 상태관리
 - `let [isOnClick, setIsOnClick] = useState(false);` → 특정 UI의 상태도 state로 저장한다!
@@ -381,27 +381,27 @@ return (
 - `let 새_배열 = (배열).map( (엘리먼트, 인덱스) => { 실행문 } )`
 - 변수에 새로운 배열이 생김!
 
-```jsx
-let [title, changeTitle] = useState(["111", "222", "333"])
+  ```jsx
+  let [title, changeTitle] = useState(["111", "222", "333"])
 
-return (
-  <div className="App">
+  return (
+    <div className="App">
 
-    {
-      title.map((item, index) => {
-        return (
-          <div className="list" key={index}>
-            <h3>` { item } <span onClick={ () => { addLikesByIdx(index) } } >👍</span> { likes } </h3>
-            <p>2월 17일 발행</p>
-            <hr/>
-          </div>
-        )
-      })
-    }
-    
-  </div>
-);
-```
+      {
+        title.map((item, index) => {
+          return (
+            <div className="list" key={index}>
+              <h3>` { item } <span onClick={ () => { addLikesByIdx(index) } } >👍</span> { likes } </h3>
+              <p>2월 17일 발행</p>
+              <hr/>
+            </div>
+          )
+        })
+      }
+      
+    </div>
+  );
+  ```
 
 ### IIFE 활용
 ```jsx
@@ -437,32 +437,32 @@ return (
 ### Props로 데이터 넘겨보기
 - 부모: `<컴포넌트이름 프롭이름={값} />`
 - 자식: `props` 파라미터로 받으면 `Object(==dict) 타입`으로 사용이 가능함!
-```jsx
-function App() {
-  let [title, setTitle] = useState(["111", "222", "333"])
+  ```jsx
+  function App() {
+    let [title, setTitle] = useState(["111", "222", "333"])
 
-  return (
-    <div className="App">
+    return (
+      <div className="App">
 
-      {
-        title.map( (item, index) => <Modal title={item} likes={likes[index]} idx={index} addLikesByIdx={addLikesByIdx} />)
-      }
-      
+        {
+          title.map( (item, index) => <Modal title={item} likes={likes[index]} idx={index} addLikesByIdx={addLikesByIdx} />)
+        }
+        
 
-    </div>
-  );
-}
+      </div>
+    );
+  }
 
-function Modal(props) {
-  <>
-    <div className="list">
-      <h3> { props.title } <span onClick={ () => { props.addLikesByIdx(idx.index) } } >👍</span> { likes } </h3>
-      <p>2월 17일 발행</p>
-      <hr/>
-    </div>
-  </>
-}
-```
+  function Modal(props) {
+    <>
+      <div className="list">
+        <h3> { props.title } <span onClick={ () => { props.addLikesByIdx(idx.index) } } >👍</span> { likes } </h3>
+        <p>2월 17일 발행</p>
+        <hr/>
+      </div>
+    </>
+  }
+  ```
 
 <br>
 
@@ -473,18 +473,18 @@ function Modal(props) {
   - `img`, `input` 등
 - React에서는 `onChange`, `onInput` 동일하게 동작함
 
-```jsx
-function App() {
-  let [inputValue, setInputValue] = useState("입력값")
+  ```jsx
+  function App() {
+    let [inputValue, setInputValue] = useState("입력값")
 
-  return (
-    <div className="App">
-      <div>{inputValue}</div>
-      <input onChange={ (event) => { setInputValue(event.target.value) } }/>
-    </div>
-  );
-}
-```
+    return (
+      <div className="App">
+        <div>{inputValue}</div>
+        <input onChange={ (event) => { setInputValue(event.target.value) } }/>
+      </div>
+    );
+  }
+  ```
 
 <br>
 
@@ -502,23 +502,23 @@ function App() {
 ### 컴포넌트 생성하는 방법
 - function이 아닌 class를 사용했었음
 
-```jsx
-import React from "react";
+  ```jsx
+  import React from "react";
 
-class Profile extends React.Component {
-  constructor() {
-    super();
-  }
+  class Profile extends React.Component {
+    constructor() {
+      super();
+    }
 
-  render() {
-    return (
-      <div>
-        새로운 컴포넌트
-      </div>
-    );
+    render() {
+      return (
+        <div>
+          새로운 컴포넌트
+        </div>
+      );
+    }
   }
-}
-```
+  ```
 
 ### state 생성하기
 
