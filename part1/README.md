@@ -124,7 +124,6 @@ return (
 - `useState`는 아래와 같이 2가지 항목이 리턴된다.
   - state 값
   - state 값을 **변경할 수 있는 함수**
-
   ```jsx
   // 내장함수 임포트
   import React, { useState } from 'react';
@@ -163,7 +162,6 @@ return (
 - 사용자와의 이벤트(클릭, 창 크기 조절 등) 발생 시 동작되는 옵저버
 - `onClick = { 함수 주소값 }`
   - ES6 문법; Arrow Function 사용해도 됨
-
   ```jsx
   let [title, changeTitle] = useState(["111", "111", "111"])
   let [likes, changeLikes] = useState(0)
@@ -187,7 +185,6 @@ return (
 - onClick = { likes = likes + 1 }
   - 이렇게 쓰면 아무 일도 일어나지 않는다! → **리랜더링이 되지 않기 때문!!**
 - 따라서 `changeLikes(변경할 값)`를 사용해야 한다!
-
   ```jsx
   <div className="list">
     <h3> { title[0] } <span onClick={ () => { changeLikes(likes + 1) } } >👍</span> { likes } </h3>
@@ -234,7 +231,6 @@ return (
 - **원본 state를 변경하면 안됨!!**
   - 리랜더링이 되지 않을 수도 있음!! (래퍼런스가 꼬이는 문제인듯?)
   - Deep copy를 해서 변경해서 사용하는 것을 권장
-
   ```jsx
   let [title, setTitle] = useState(["111", "111", "111"])
   let [likes, setLikes] = useState([0, 0, 0])
@@ -288,7 +284,6 @@ return (
 - `App()`도 컴포넌트의 일종
 - 컴포넌트의 반환값에는 반드시 하나의 태그만 있어야 함!!
   - `Fragment` 태그(`<>``</>`)를 사용해서 처리해도 됨.
-
   ```jsx
   function App() {
     return (
@@ -334,7 +329,6 @@ return (
 - 04장에서 언급했듯이, JSX에서는 IIFE만 활용이 가능!!
 - 따라서 `if-else`문을 활용할 수 없다!
 - 대신 `삼항연산자`(`<조건식> ? <True> : <False>`)를 사용하면 가능!
-
   ```jsx
   let [isOnClick, setIsOnClick] = useState(false)
 
@@ -380,7 +374,6 @@ return (
 ### map 함수
 - `let 새_배열 = (배열).map( (엘리먼트, 인덱스) => { 실행문 } )`
 - 변수에 새로운 배열이 생김!
-
   ```jsx
   let [title, changeTitle] = useState(["111", "222", "333"])
 
@@ -472,7 +465,6 @@ return (
 - JSX의 모든 태그는 반드시 끝나야 함!!
   - `img`, `input` 등
 - React에서는 `onChange`, `onInput` 동일하게 동작함
-
   ```jsx
   function App() {
     let [inputValue, setInputValue] = useState("입력값")
@@ -501,7 +493,6 @@ return (
 
 ### 컴포넌트 생성하는 방법
 - function이 아닌 class를 사용했었음
-
   ```jsx
   import React from "react";
 
@@ -521,7 +512,6 @@ return (
   ```
 
 ### state 생성하기
-
 ```jsx
 constructor() {
   super();
@@ -534,7 +524,6 @@ constructor() {
 ```
 
 ### state 사용하기 & 함수 만들기
-
 ```jsx
 // JSX
 render() {
