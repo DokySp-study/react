@@ -414,6 +414,7 @@ return (
         for (let i = 0; i < 10; i++){
           arr.push(<div>Hello!</div>)
         }
+        return arr
       })()
       // 위에 소괄호 → 즉시실행 의미!!
       // 위와 같은 형식 말고 위에 함수를 JSX 외부로 빼고, {} 안에서 실행만 해줘도 가능!
