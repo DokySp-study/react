@@ -490,6 +490,93 @@ function App() {
   - `/detail/:id/:name/:enable`
   - `let { id, name, enable } = useParams()`
 
+<br>
 
 ## 05. Styled Components
+
+### 설치
+
+```sh
+$ npm install styled-components
+# 또는
+$ yarn add styled-components
+```
+
+### styled-components란?
+- 보통은 아래와 같이 className 지정하고, 이에 맞게 CSS 파일을 수정
+  ```jsx
+  <button className='btnAdd'>추가하기</button>
+  ```
+  ```css
+  .btnAdd {
+    background: yellow;
+    color: black;
+    padding: 10px;
+  }
+  ```
+- styled-components를 사용하면 JSX에서 바로 해결이 가능!
+- 백팁을 뒤에 붙이는 것은 **Tagged Template Literals**문법임
+  ```jsx
+  import styled from 'styled-components'
+
+  let YellowButton = styled.button`
+    background: yellow;
+    color: black;
+    padding: 10px;
+  `
+  ...
+  <YellowButton>노랑버튼</YellowButton>
+  ```
+
+### 장점
+1. CSS 파일을 수정하지 않고 JS 내부에서 해결이 가능!
+2. 스타일이 다른 JS 파일에 간섭되지 않음!
+  - Ex> `App.css` 파일에 적용한 스타일이 `Detail.js`에도 적용됨!
+    - `App.module.css` 이런 식으로 파일 이름을 만들면 `App.js`에만 적용됨!
+  - 코드를 하나로 빌드하는 과정에서 CSS 파일이 합쳐지기 때문
+  - styled-components는 간섭이 되지 않음!
+3. 페이지 로딩 시간이 단축됨
+  - styled-components는 별도 CSS 파일을 만드는 것이 아니라 해당 컴포넌트를 style 태그에 넣어주게 됨
+  - 각 페이지마다 필요한 CSS만 로드하게 됨!
+
+### props 활용하기
+- 이 친구도 결국 컴포넌트이기 때문에 props를 받을 수 있음
+- 아래와 같이 사용 가능하며, 중괄호 안의 내용은 **Tagged Template Literals**문법에 의해 가변인자로 컴포넌트에 들어가게 됨
+  ```jsx
+  let CustomButton = styled.button`
+    background: ${ props => props.bg };
+    color: ${ props => props.bg === 'blue' ? 'white' : 'black' };
+    padding: 10px;
+  `
+  ...
+  <CustomButton bg="orange">노랑버튼</CustomButton>
+  ```
+
+### styled-components 복사하기
+- `styled(복사할_컴포넌트_이름)`를 사용하면 됨
+  ```jsx
+  let CustomButton = styled.button`
+    ...
+  `
+  let NewCustomButton = styled(CustomButton)``
+  ...
+  <CustomButton bg="orange">노랑버튼</CustomButton>
+  <NewCustomButton bg="blue">파랑버튼</NewCustomButton>
+  ```
+
+### 단점
+1. JS 파일이 복잡해짐
+2. 다른 파일에서 스타일 재사용 시, 결국 CSS와 차이점이 없음
+3. 협업 시, 퍼블리셔가 스타일드 컴포넌트 문법을 모를 수 있음 (Tagged Template Literals)
+
+### Tagged Template Literals
+- ES6 문법
+- 함수(인자1, 가변인자) 가정 시,
+- 함수\`내용내용내용 \${변수1} 내용내용 \${변수2}\` → 이렇게 쓰면
+- 함수에서 `["내용내용내용 ", " 내용내용 "]`, `[변수1, 변수2]` 이런 식으로 받아옴
+- [https://mygumi.tistory.com/395](https://mygumi.tistory.com/395)
+
+<br>
+
+## 06. Lifecycle Hook
 - 작성중...

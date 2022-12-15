@@ -3,6 +3,21 @@
 
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import styled from 'styled-components'
+
+
+let CustomButton = styled.button`
+  background: ${ props => props.bg };
+  color: ${ props => props.bg === 'blue' ? 'white' : 'black' };
+  padding: 10px;
+`
+let NewCustomButton = styled(CustomButton)``
+
+let BlackBox = styled.div`
+  background: grey;
+  padding: 20px;
+`
+
 
 function Detail(props) {
 
@@ -30,6 +45,12 @@ function Detail(props) {
 
     return (
       <div className="container">
+        
+        <BlackBox>
+          <CustomButton bg="orange">노랑버튼</CustomButton>
+          <NewCustomButton bg="blue">파랑버튼</NewCustomButton>
+        </BlackBox>
+        
         <div className="row">
           <div className="col-md-6">
             <img 
