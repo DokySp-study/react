@@ -11,10 +11,35 @@ import { Nav, Navbar, Container, NavDropdown, Button } from "react-bootstrap";
 import { useState } from "react";
 
 // Routing
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Outlet, Route, Routes,  } from "react-router-dom";
 
 function App() {
   let [shoesData, setShoesData] = useState(data);
+
+  function MainPage() {
+    return (
+      <div>
+        <div className="Jumbotron">
+          <h1>20% 할인중!</h1>
+          <p>
+            This is a simple hero unit, a simple jumbotron-style component
+            for calling extra attention to featured content or information.
+          </p>
+          <p>
+            <Button bsStyle="primary">Learn more</Button>
+          </p>
+        </div> 
+  
+        <div className="container">
+          <div className="row">
+            {shoesData.map((shoe, idx) => (
+              <Item key={idx} shoesData={shoe} imageIdx={idx + 1} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
@@ -70,11 +95,16 @@ function App() {
       {/* 페이지마다 다른 페이지가 아님! */}
       {/* HTML 파일 하나를 계속 갈아끼우면서 다른 페이지처럼 보이게 함! */}
 
+
+
+
+
+      {/* react-router-dom-v5 */}
       {/* 스위치를 사용하면 중복이 있을 경우, 제일 상단에 있는 페이지를 보여주게 됨! */}
-      <Switch>
-        {/* */}
+      {/* <Switch> */}
+
         {/* 메인 페이지 */}
-        <Route exact path="/">
+        {/* <Route exact path="/">
           <div>
             <div className="Jumbotron">
               <h1>20% 할인중!</h1>
@@ -85,18 +115,18 @@ function App() {
               <p>
                 <Button bsStyle="primary">Learn more</Button>
               </p>
-            </div>
+            </div> */}
 
             {/* 이렇게 사용하는 방법은 원조 방식임 (단, 용량이 조금 커짐)*/}
             {/* React-Bootstrap 설치했는데 아래와 같이 사용하고 싶다면, CDN링크를 index.html에 추가해야 함! */}
 
-            <div className="container">
+            {/* <div className="container">
               <div className="row">
                 {shoesData.map((shoe, idx) => (
                   <Item key={idx} shoesData={shoe} imageIdx={idx + 1} />
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* 
               <div className='container'>
@@ -107,19 +137,23 @@ function App() {
                 </div>
               </div> 
             */}
-          </div>
-        </Route>
+          {/* </div>
+        </Route> */}
 
         {/* */}
         {/* 상세 페이지 */}
-        <Route exact path="/detail">
+        {/* <Route exact path="/detail"> */}
           {/* 컴포넌트를 밖으로 뺌 -> 모듈화 */}
           {/* 폴더로 따로 빼기도 한다 */}
+        
+        {/* <Route exact path="/detail/:id"> */}
+          {/* 아무 문자나 받겠다는 의미 - path variable */}
+
 
           {/* 중요한 데이터는 최상위(App)에서 관리 -> 하위 컴포넌트로 props로 전달해서 내림 */}
           {/* 복잡해지면 다른 컴포넌트 혹은 Redux로 관리 */}
-          <Detail shoesData={shoesData} />
-        </Route>
+          {/* <Detail shoesData={shoesData} />
+        </Route> */}
         {/* */}
         {/* 추가 라우팅 방법 */}
         {/* 이런 식으로 컴포넌트를 넣을 수도 있음 */}
@@ -129,14 +163,41 @@ function App() {
         {/* url에 파라미터 값 받기 */}
         {/* url을 통해 특수한 값을 받아오는 방법은 body, query string, path variable (params) 가 있음 */}
         {/* https://velog.io/@jcinsh/Query-string-path-variable */}
-        <Route path="/:id">
-          <div>ㄴㅁㅇㄹㅁㄴㅇㄹㄴㅇㄹ</div>
+        {/* <Route path="/:id">
+          <div>기타 페이지</div>
         </Route>
-        {/* */}
-      </Switch>
+        
+      </Switch> */}
+
+
+
+
+
+
+      {/* react-router-dom-v6 */}
+      <Routes>
+        <Route path="/" element={ <MainPage/> }/>
+        <Route path="/detail/:id" element={ <Detail shoesData={ shoesData }/> } />
+
+        {/* 앞에 / 안붙여도 동작은 됨 */}
+        {/* 동일 경로인 경우, 상단이 우선적으로 보임 */}
+        {/* <Route path="/about" element={ <>어바웃페이지1</> } /> */}
+        <Route path="about" element={ 
+          <>
+            어바웃페이지<br/>
+            <Outlet/>
+          </>}>
+          <Route path="member" element={ <>구성원</> } />
+          <Route path="location" element={ <>위치정보</> } />
+        </Route>
+        
+        <Route path="*" element={ <>없는 페이지입니다.</> } />
+      </Routes>
+
     </div>
   );
 }
+
 
 function Item(props) {
   return (

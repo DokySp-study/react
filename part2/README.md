@@ -51,7 +51,8 @@
 ### 에셋 파일 추가
 - `/src` 혹은 `/public`에 추가 가능
   - `/src`: 패키징 시 영향 받음
-  - `/public`: 패키징 시 영향 X → 절대경로로 가져와야 함 (귀찮...)
+  - `/public`: 패키징 시 영향 X → 절대경로로 가져와야 함
+    - 절대경로 가져오는 법: `process.env.PUBLIC_URL + "/img/bg.png"`
 
 ### Bootstrap 반응형 웹
 - `container` → `row` → `col-md-#`
@@ -95,6 +96,10 @@
 - `export`한 변수 또는 함수를 가져다 사용할 때 사용
   ```js
   import 이름 from 경로;
+  ```
+- 리소스 파일도 가져올 수 있음!
+  ```js
+  import bgImg from './img/bg.png';
   ```
 
 ### 활용예제
@@ -188,7 +193,32 @@ $ yarn add react-router-dom
   )
   ```
 
-### 라우팅해보기
+### 라우팅해보기 (v6)
+- 아래와 같이 가정할 때,
+  - 메인 페이지: `/`
+  - 상세 페이지: `/detail`
+  - 요약 페이지: `/about`
+  ```jsx
+  import { Routes, Route, Link } from 'react-router-dom';
+  ...
+  <Routes>
+    <Route path="/"/>
+    <Route path="/detail" element={ <div>상세 페이지</div> }/>
+    <Route path="/about" element={ <AboutPage/> }/>
+  </Routes>
+  ```
+- 각각의 url 접속 시, 각각의 엘리먼트들이 화면에 표시됨
+- 동일 경로인 경우, 상단에 있는 라우터를 표시
+- **페이지별로 컴포넌트화**하면 쉽게 관리할 수 있다
+- 라우터 장점
+  - 뒤로가기 등 네비게이션 관리 용이 & 속도 빠름
+  - 페이지 이동이 쉬움 (필요에따라 원하는 페이지를 보여줄 수 있음)
+
+
+<details>
+<summary>react-router-dom-v5</summary>
+
+### 라우팅해보기 (v5)
 - 아래와 같이 가정할 때,
   - 메인 페이지: `/`
   - 상세 페이지: `/detail`
@@ -219,6 +249,7 @@ $ yarn add react-router-dom
   - 메인 페이지: "메인 페이지" 표시
   - 상세 페이지: "메인 페이지", **"상세 페이지"** 표시
 - 위와 같은 문제 해결하기 위해 `exact` 요소 추가!
+  - **react-router-dom v6 에서는 사용방법 변함!! (위 항목 참고)**
   ```jsx
   <Router exact path="/">
     <div>메인 페이지</div>
@@ -229,11 +260,11 @@ $ yarn add react-router-dom
   </Router>
   ```
 
+</details>
+
 ### 라우팅 시 알아둘 점
 - 페이지마다 다른 HTML 파일이 아님
 - 리엑트가 경로마다 랜더링을 해주는 것! → 속도가 빠른 이유!
-
-___
 
 ### 페이지를 컴포넌트로 만들기 (모듈화)
 - 파일로 분리를 한 이후에
@@ -258,15 +289,25 @@ ___
   // App.js
   import Detail from './Detail.js'
   ...
+  <Route path="detail" element={ <Detail/> }/>
+  ```
+  <details>
+  <summary>react-router-dom-v5</summary>
+
+  ```jsx
+  // App.js
+  import Detail from './Detail.js'
+  ...
   <Router path="detail">
     <Detail/>
   </Router>
   ```
+  </details>
 
 ### Link로 페이지 이동
 - `Link` 컴포넌트를 사용해서 작성
   ```jsx
-  import { Router, Link } from 'react-router-dom';
+  import { Link } from 'react-router-dom';
   ...
   <div>
     <Link to="/detail">
@@ -275,10 +316,34 @@ ___
   </div>
   ```
 
-### useHistory()
-- `Link` 컴포넌트를 사용해서 작성
+### Navigation (v6)
+- `useNavigate` hook을 사용해서 작성
+```jsx
+import { useNavigate, Outlet } from 'react-router-dom'
+
+function App() {
+  let navigate = useNavigate();
+  ...
+  return (
+    ...
+    {/* 원하는 경로로 이동시켜줌 */}
+    <button onClick={ () => navigate('/이동할경로') }/>
+    {/* 뒤로 한 페이지 이동 → 뒤로가기 */}
+    <button onClick={ () => navigate(-1) }/>
+    {/* 앞으로 한 페이지 이동 */}
+    <button onClick={ () => navigate(1) }/>
+    ...
+  )
+}
+```
+
+### useHistory() (v5)
+<details>
+<summary>자세한 내용은 여기에서 확인</summary>
+
+- `useHistory` hook을 사용해서 작성
   ```jsx
-  import { Router, Link, useHistory } from 'react-router-dom';
+  import { Link, useHistory } from 'react-router-dom';
   ...
   function App() {
     // Hook의 일종
@@ -306,8 +371,78 @@ ___
     )
   }
   ```
+</details>
 
-### Switch
+### 404 페이지
+- 이상한 경로로 사용자가 접근했을 떄, 별도 처리를 안하면 아무것도 뜨지 않음
+- `*` route를 추가하여 모든 경로를 빨아들이는 역할을 만들어 처리
+  ```jsx
+  <Routes>
+    ...
+    <Route path="*" element={ <ErrorPage/> }/>
+  </Routes>
+  ```
+
+### Nested Routes (v6)
+- 세부 라우팅을 줄 때 아래와 같이 주어도 동작은 한다.
+  ```jsx
+  <Routes>
+    <Route path="/about" element={ <AboutPage/> }/>
+    <Route path="/about/member" element={ <AboutMemPage/> }/>
+    <Route path="/about/location" element={ <AboutLocPage/> }/>
+  </Routes>
+  ```
+- 그러나 Nested Routes를 활용하면 아래와 같이 구성이 가능하다.
+  ```jsx
+  <Routes>
+    <Route path="/about" element={ <AboutPage/> } >
+      <Route path="member" element={ <AboutMemberSubPage/> }/>
+      <Route path="location" element={ <AboutLocationSubPage/> }/>
+    </Route>
+  </Routes>
+  ```
+- 장점 1. 코드가 간단해짐
+- 장점 2. **자기 자신의 엘리먼트와 부모 엘리먼트를 같이 한 페이지에 표시해줌**
+  - 부모 컴포넌트 내에 `<Outlet/>` 컴포넌트에 나의 내용을 표시해줌
+    ```jsx
+    <Routes>
+      <Route path="/about" element={ 
+          <>
+            어바웃페이지<br/>
+            <Outlet/>
+          </>}>
+        <Route path="member" element={ <>멤버</> }/>
+        <Route path="location" element={ <>위치</> }/>
+      </Route>
+    </Routes>
+    ```
+    ```text
+    /about
+    어바웃페이지
+
+    /about/member
+    어바웃페이지
+    멤버
+
+    /about/location
+    어바웃페이지
+    위치
+    ```
+- 언제 사용할까?
+  - 여러 유사한 페이지에 내용만 살짝씩 바꿔야 하는 경우!
+
+### React 폴더 구조
+- 비슷한 파일끼리 묶어놓는 경우가 많음
+- `/routes`, `/pages`, `/components` 등등
+
+### Hook
+- 유용한 기능들을 하는 함수
+- `useState()`, `useNavigate()`, `userParams()` 등등
+
+### Switch (v5)
+<details>
+<summary>자세한 내용은 여기에서 확인</summary>
+
 - 아래 코드에서 `<Switch>`를 안쓰면 1번과 2번 모두 표시됨 (둘 다 조건 만족하기 때문)
 - `<Switch>`를 사용하면 **조건을 만족하는 최상위 라우터를 보여줌**
   ```jsx
@@ -325,3 +460,36 @@ ___
     </Router>
   </Switch>  
   ```
+</details>
+
+### state를 어디에 담아둘 것인가?
+- 홈페이지를 구성하는 중요한 정보의 경우, App.js (또는 최상위 컴포넌트)에 두는 것이 좋음!
+- 자식에서 상위 컴포넌트로 보내는 것이 어렵기 때문!
+- 데이터가 많아지는 경우, **redux를 통해 상태관리를 용이**하게 할 수 있음!
+
+### Path Variable (Params)
+- `/detail/0`, `/detail/1`, `/detail/2`
+- 이런 식으로 경로를 변수로 받는 방법!
+  - `/:변수명`으로 받고, 
+  - `userParams()` hook으로 받아올 수 있음!
+  ```jsx
+  <Router path="/detail/:id">
+    <Detail data=shoes[]/>
+  </Router>
+  ```
+  ```jsx
+  import { useHistory, useParams } from 'react-router-dom';
+  
+  let { id } = useParams() // hook
+  // url에 path variables(param)을 받음!
+
+  <div>params.data[id].title</div>
+  <div>params.data[id].content</div>
+  ```
+- 파라미터는 여러 개를 사용할 수 있음
+  - `/detail/:id/:name/:enable`
+  - `let { id, name, enable } = useParams()`
+
+
+## 05. Styled Components
+- 작성중...
