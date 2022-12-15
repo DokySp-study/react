@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Link, Outlet, Route, Routes,  } from "react-router-dom";
 
 function App() {
-  let [shoesData, setShoesData] = useState(data);
+  let [ shoesData ] = useState(data);
 
   function MainPage() {
     return (
@@ -205,6 +205,7 @@ function Item(props) {
       <img
         src={`https://codingapple1.github.io/shop/shoes${props.imageIdx}.jpg`}
         width="100%"
+        alt=""
       />
       <h4>{props.shoesData.title}</h4>
       <p>{props.shoesData.content}</p>

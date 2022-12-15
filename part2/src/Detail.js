@@ -1,7 +1,7 @@
 
 // 파일 분리
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 function Detail(props) {
@@ -32,7 +32,10 @@ function Detail(props) {
       <div className="container">
         <div className="row">
           <div className="col-md-6">
-            <img src={`https://codingapple1.github.io/shop/shoes${target.id + 1}.jpg`} width="100%" />
+            <img 
+              src={`https://codingapple1.github.io/shop/shoes${target.id + 1}.jpg`}
+              width="100%"
+              alt='' />
           </div>
           <div className="col-md-6 mt-4">
             <h4 className="pt-5">{target.title}</h4>
