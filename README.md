@@ -12,7 +12,16 @@
 
 ## Part 2
   - [정리내용 보러가기](https://github.com/DokySp-study/react/blob/main/part2/README.md)
-  - ... 등
+    - yarn
+    - Bootstrap
+    - import & export
+    - react-router-dom (`v6`)
+    - Styled Components
+    - Lifecycle Hook (`useEffect()`)
+    - AJAX (`axios`)
 
+## Part 3
+  - [정리내용 보러가기](https://github.com/DokySp-study/react/blob/main/part3/README.md)
+    - 작성중...
 ## 출처
 - 코딩애플 리엑트 강의
