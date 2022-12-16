@@ -725,24 +725,123 @@ setTimeout( () => {
   useEffect(()=>{ return ()=>{ } }, [])
   ```
 
-<br>
-
 ### useEffect 활용해보기
 - input 창에 숫자만 입력할 수 있도록 만들어보기
+  ```jsx
+  let [textbox, setTextbox] = useState("")
+  useEffect( () => {
+    if( Number.isNaN(Number(textbox)) ){
+      alert("숫자만 입력하세요!")
+      setTextbox(textbox.substring(0, textbox.length - 1))
+    }
+  }, [textbox] )
+  ...
+  <input value={ textbox } onChange={ (event) => { 
+    setTextbox(event.target.value) 
+  }}/>
+  ```
 
-```jsx
-let [textbox, setTextbox] = useState("")
-useEffect( () => {
-  if( Number.isNaN(Number(textbox)) ){
-    alert("숫자만 입력하세요!")
-    setTextbox(textbox.substring(0, textbox.length - 1))
-  }
-}, [textbox] )
-...
-<input value={ textbox } onChange={ (event) => { 
-  setTextbox(event.target.value) 
-}}/>
-```
+<br>
 
 ## 07. AJAX
-- 작성중...
+
+### 서버? 요청?
+- 서버: 데이터 요청 시, 보내주는 프로그램
+  - 단, 규격에 맞추어 요청을 해주어야 함!
+  - 방법: `GET`, `POST` 등
+  - 어떤 데이터: params, query string ...
+
+### AJAX 직접 사용해보기
+- 예제 데이터
+  - `GET` [https://codingapple1.github.io/shop/data2.json](https://codingapple1.github.io/shop/data2.json)
+- GET, POST 등 요청을 하게되면 리프레시가 된다!
+  - AJAX를 사용하면 백그라운드로 요청하므로 리프래시를 막을 수 있다!
+
+#### 요청 방법
+1. XMLHttpRequest
+  - 예전 JS 문법
+2. fetch()
+  - 요즘 JS 문법
+3. axios 패키지 활용
+
+### axios
+- AJAX 요청을 추상화시킨 패키지
+
+### axios 설치하기
+```sh
+$ npm install axios
+# 또는
+$ yarn add axios
+```
+```js
+import axios from 'axios'
+```
+
+### GET method
+- `GET` 요청을 간단하게 해줌
+  ```js
+  axios.get(주소)
+    .then( (response) 요청 완료 후 처리 콜백 함수)
+    .catch( (reason) 실패 시 실행 콜백)
+  ```
+  ```jsx
+  <button onClick={ () => { 
+    axios.get('https://codingapple1.github.io/shop/data2.json').then(
+      (res) => {
+        // let tmp = []
+        // for(let item of shoesData) tmp.push(item)  // Deepcopy
+        // for(let item of res.data) tmp.push(item)   // Append
+        let tmp = [...shoesData, ...res.data]         // Spread Operator
+        setShoesData(tmp)
+      }
+    ).catch( (reason) => {
+      alert(reason)
+    } )
+  } }>버튼</button>
+  ```
+
+
+### POST method
+- `POST` 요청을 간단하게 해줌
+  ```js
+  axios.post(
+    '/url',
+    {body1: 1, body2: 2}
+  ).then(
+    ...
+  )
+  ```
+
+### 여러 개의 요청을 한번에 진행할 때
+- `Promise`를 사용해서 묶을 수 있음!
+  ```js
+  axios.get('/1')
+  axios.get('/2')
+  ...
+  ```
+  ```js
+  Promise.all([
+    axios.get('/1')
+    axios.get('/2')
+    ...
+  ]).then(
+    ...
+  )
+  ```
+
+### request, response는 항상 문자다!
+- 제곧내
+- 그런데, Array, Object도 잘 받아지는데..?
+  - `{"name": "kim", ...}` → 키값에 "" 처리! → JSON
+  - JSON으로 전달하면 axios가 알아서 차리!
+
+### fetch()
+- 브라우저 기본 문법
+- JSON 파싱을 직접 만들어주어야 함!
+  ```js
+  fetch('/url').then(
+    res => res.json()
+  ).then(
+    data => { 데이터 처리 }
+  )
+  ```

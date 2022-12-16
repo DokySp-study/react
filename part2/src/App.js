@@ -12,34 +12,10 @@ import { useState } from "react";
 
 // Routing
 import { Link, Outlet, Route, Routes,  } from "react-router-dom";
+import axios from "axios";
 
 function App() {
-  let [ shoesData ] = useState(data);
-
-  function MainPage() {
-    return (
-      <div>
-        <div className="Jumbotron">
-          <h1>20% 할인중!</h1>
-          <p>
-            This is a simple hero unit, a simple jumbotron-style component
-            for calling extra attention to featured content or information.
-          </p>
-          <p>
-            <Button bsStyle="primary">Learn more</Button>
-          </p>
-        </div> 
-  
-        <div className="container">
-          <div className="row">
-            {shoesData.map((shoe, idx) => (
-              <Item key={idx} shoesData={shoe} imageIdx={idx + 1} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  let [ shoesData, setShoesData ] = useState(data);
 
   return (
     <div className="App">
@@ -196,8 +172,47 @@ function App() {
 
     </div>
   );
-}
 
+  function MainPage() {
+    return (
+      <div>
+        <div className="Jumbotron">
+          <h1>20% 할인중!</h1>
+          <p>
+            This is a simple hero unit, a simple jumbotron-style component
+            for calling extra attention to featured content or information.
+          </p>
+          <p>
+            <Button bsStyle="primary">Learn more</Button>
+          </p>
+        </div> 
+  
+        <div className="container">
+          <div className="row">
+            {shoesData.map((shoe, idx) => (
+              <Item key={idx} shoesData={shoe} imageIdx={idx + 1} />
+            ))}
+          </div>
+        </div>
+
+        <button onClick={ () => { 
+          axios.get('https://codingapple1.github.io/shop/data2.json').then(
+            (res) => {
+              // let tmp = []
+              // for(let item of shoesData) tmp.push(item)
+              // for(let item of res.data) tmp.push(item)
+              let tmp = [...shoesData, ...res.data]
+              setShoesData(tmp)
+            }
+          ).catch( (reason) => {
+            alert(reason)
+          } )
+        } }>버튼</button>
+
+      </div>
+    );
+  }
+}
 
 function Item(props) {
   return (
