@@ -579,4 +579,170 @@ $ yarn add styled-components
 <br>
 
 ## 06. Lifecycle Hook
+
+### 컴포넌트 생명주기
+- mount: 보여지는 순간
+- update: 제곧내 (state 업데이트 등, 재랜더링 시)
+- unmount: 사라지는 순간
+
+### 그래서 뭐가 중요한데?
+- 위의 생명주기 중간중간에 간섭(interrupt)이 가능!
+- onCreate(), onDispose()와 비슷
+- 갈고리(Hook)를 걸어서 코드를 실행 가능!
+
+### 이전 방식: 메소드 사용
+  ```js
+  class Detail2 extends React.Component {
+    // 아래와 같은 함수로 Lifecycle 중간에 개입이 가능했음
+    componentDidMount() {}
+    componentDidUpdate() {}
+    componentWillUnmount() {}
+  }
+  ```
+
+### 최신 방식: useEffect()
+- 아래와 같이 `useEffect()` hook을 사용하면 됨
+- `useEffect(훅_콜백, [디팬던시])`
+  ```js
+  function Detail(props) {
+    let [count, setCount] = useState(1)
+
+    useEffect( () => {
+      console.log("useEffect Hook")
+    })
+
+    // 1번
+    console.log("change state")
+
+    return (
+      <button onClick={ () => setCount(count + 1) }>버튼</button>
+    )
+  }
+  ```
+- 실제로 Detail 페이지 들어갈 때 두 번 동작되는데
+  - 디버깅을 위해 동작하는 것(?)
+  - 빌드를 하거나
+  - `<React.StrictMode>` 제거하면 한번만 뜸
+- state 업데이트 시에도 잘 동작함
+
+### useEffect()를 언제 사용하는 것인가?
+- 위의 코드에서 1번도 잘 동작하는데..??
+  - `useEffect()`는 html 랜더링 이후에 동작함!
+  - 따라서, 랜더링에 지장이 생기는 부분은 useEffect()로 처리하는 것이 좋음!
+  ```js
+  let result = 0;
+
+  // 1번: 아래 코드가 전부 처리된 이후에 랜더링 됨
+  // for (let i = 0; i < 10000; i++){
+  //   console.log(result)
+  //   result += 1
+  // }
+
+  useEffect( () => {
+    
+    // 2번: 랜더링 된 이후에 아래 코드가 수행됨
+    for (let i = 0; i < 10000; i++){
+      console.log(result)
+      result++
+    }
+
+    console.log("useEffect Hook")
+  })
+  ```
+- 그래서 언제 사용하는 것이 좋을까?
+  - 오래 걸리는 연산들
+  - 서버와 통신하는 부분
+  - 타이머
+- 즉, 먼저 랜더링하고 이후 연산처리해서 사용자에게 빠르게 반응 할 수 있도록 하는 것이 중요한 작업에 사용!
+- 이름이 `useEffect`인 이유?
+  - side effect: 핵심 기능과 상관없는 부가기능
+  - 여기에서 이름을 따옴!
+  - html 랜더링 기능 이외의 기능을 처리!
+
+### setTimeout()
+```js
+void setTimeout(특정 시간 이후 실행될 함수 콜백, ms)
+
+setTimeout( () => {
+  console.log("시간 지남!!")
+}, 1000 )
+// 1초 뒤에 "시간 지남!!"이 콘솔에 뜬다.
+```
+
+### useEffect Dependency
+- 특정 변수(state)가 변할 때 훅이 동작되도록 하는 방식!
+  ```js
+  useEffect( () => {
+    setIsAlertVisible(true)
+    setTimeout( () => {
+      setIsAlertVisible(false)
+    },
+    2000 )
+  }, [count] ) // → 노랑버튼 누를 때(count + 1)마다 동작
+  ```
+- 디팬던시를 비워두면? → **컴포넌트가 업데이트 될 때 코드 실행이 되지 않음!!**
+  ```js
+  useEffect( () => {
+    setIsAlertVisible(true)
+    setTimeout( () => {
+      setIsAlertVisible(false)
+    },
+    2000 )
+  }, [] ) // → 최초 마운트 시에만 동작!!
+  ```
+
+### useEffect Cleanup Function
+- state 변경 시, 업데이트 마무리하고 동작하는 함수
+  - **`update`, `unmount`일 때만 실행됨!!**
+- useEffect()에서 함수를 반환하는 것을 Cleanup Function이리 함
+- Ex> 기존 타이머 제거, ajax 요청 중복 방지 등
+
+  ```js
+  useEffect( () => {
+    
+    setTimeout( () => {
+      setIsAlertVisible(false)
+    },
+    2000 )
+
+    return () => {
+      console.log("Cleanup Function")
+    }
+  }, )
+  ```
+
+### useEffect() 정리
+- 업데이트 시마다 동작
+  ```js
+  useEffect(()=>{ })
+  ```
+- 마운트 시 동작
+  ```js
+  useEffect(()=>{ }, [])
+  ```
+- 언마운트 시 동작  
+  ```js
+  useEffect(()=>{ return ()=>{ } }, [])
+  ```
+
+<br>
+
+### useEffect 활용해보기
+- input 창에 숫자만 입력할 수 있도록 만들어보기
+
+```jsx
+let [textbox, setTextbox] = useState("")
+useEffect( () => {
+  if( Number.isNaN(Number(textbox)) ){
+    alert("숫자만 입력하세요!")
+    setTextbox(textbox.substring(0, textbox.length - 1))
+  }
+}, [textbox] )
+...
+<input value={ textbox } onChange={ (event) => { 
+  setTextbox(event.target.value) 
+}}/>
+```
+
+## 07. AJAX
 - 작성중...
