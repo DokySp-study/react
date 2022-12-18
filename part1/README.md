@@ -149,7 +149,7 @@ return (
   }
   ```
 
-### Destructuring
+### Destructuring (배열)
 - ES6 문법
 - 배열로 반환되는 함수 리턴 값을 배열로 받을 수 있도록 함
 - **여러 개의 값을 리턴 가능!!**

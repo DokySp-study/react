@@ -74,6 +74,10 @@
 
 ### Export
 - 다른 파일로 변수, 함수를 내보낼 때 사용
+  ```js
+  export let age = 12
+  export let name = "Sookie"
+  ```
 - `export defalut`
   - 보통 **코드 마지막**에 옴
   - **한번만 사용이 가능!!**
@@ -692,7 +696,8 @@ setTimeout( () => {
   ```
 
 ### useEffect Cleanup Function
-- state 변경 시, 업데이트 마무리하고 동작하는 함수
+- useEffect(side effect) 함수 실행 전 동작하는 함수
+- useEffect 동작하기 전, 한 번 청소해준다는 느낌!
   - **`update`, `unmount`일 때만 실행됨!!**
 - useEffect()에서 함수를 반환하는 것을 Cleanup Function이리 함
 - Ex> 기존 타이머 제거, ajax 요청 중복 방지 등
