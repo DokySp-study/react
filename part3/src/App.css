@@ -1,0 +1,67 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.aniStart {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.aniDispose {
+  opacity: 1;
+  transform: scale(1);
+  /* transition: opacity 0.5s; */  
+  /* opacity가 변경되었을 때 0.5초간 서서히 변경됨 */
+
+  /* transition: all 0.5s; */
+  transition: opacity 1s, transform 0.5s;
+  /* 여러 효과를 적용 시, all 또는 쉼표로 나누어 적으면 됨 */
+}
+
+
+.aniFI {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.aniFO {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
