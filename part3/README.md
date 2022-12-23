@@ -207,7 +207,7 @@
     - 하나의 state를 slice라고 함!
     - `createSlice()`: `useState()`와 비슷한 역할
   2. reducer에 등록!
-    - 여기에 등록한 형태와 같은 형태로 저장됨! (키-값)
+    - 여기에 등록한 형태와 같은 형태로 저장됨! (키: 값)
     ```js
     import { configureStore, createSlice } from "@reduxjs/toolkit";
 
@@ -264,3 +264,173 @@
 
 ### redux 주의점
 - 모든 state를 redux에 넣을 필요는 없다!!
+
+
+### redux setState
+1. state를 수정하는 함수를 slice안에 구현하고
+2. 만든 함수 export
+3. 필요한 곳에서 불러와서 사용 (store.js에 요청하도록 제작)
+  ```jsx
+  let user = createSlice({
+    name: "user",
+    initialState: "김길동",
+
+    // 1.
+    reducers: {
+      setUser(state) {
+        return "홍길동 " + state
+      }
+    }
+  })
+
+  // 2. 
+  // user.actions -> reducers 안에 내용이 나옴
+  export let { setUser } = user.actions
+  ```
+  ```jsx
+  // 3.
+  import { setUser } from "../store/store"
+  ...
+  let dispatch = useDispatch()
+  ...
+  <button
+    onClick={() => {
+      dispatch(setUser())
+      // setUser() // 이거만쓰면 동작 안함
+      console.log(user)
+    }}>
+    +
+  </button>
+  ```
+
+#### redux 왜 이렇게 복잡한가 (`dispatch()`) ⭐️⭐️⭐️
+- dispatch → '보내다'라는 뜻
+  - store.js에 setUser() 실행해달라고 요청한 것
+- **컴포넌트 개수가 무지막지하게 늘어났을 경우..**
+- 여러 컴포넌트가 변경함수를 각각 짜서 수정하면 디버깅이 매우 어려워짐!!
+- 요청 함수(dispatch)를 통해 요청하면?
+  - 변경은 무조건 변경 함수(위에서는 `setUser()`)에서만 일어나므로 이거만 조사하면 됨!
+
+### redux에 state가 array 또는 object인 경우
+1. 함수 return을 해도 되지만
+2. **직접 state를 변경해도 가능!!**
+  ```jsx
+  reducers: {
+    setPerson(state) {
+      // 1. 
+      // return { name: "홍길동", age: 20 }  
+      
+      // 2.
+      state.name = "홍길동"
+    },
+    addAge(state, action) {
+      state.age += action.payload // payload: 화물/소포
+    }
+  }
+  ```
+- state 변경 시, array/object 타입이면 `.`연산자로 접근하여 변경
+  - state로 수정을 편리하게 하기 위해 **보통 그냥 값도 {} 형태로 저장함!!**
+
+### redux action에 파라미터를 추가로 받는 방법
+- slice 안에있는 모든 함수들을 엑션이라고 함!!
+  ```js
+  reducers: {
+    setPerson(state) {},
+    addAge(state, action) {},
+    ...
+  }
+  ```
+- 여기서 액션함수에서 action 파라미터를 받을 수 있는데,
+- `action.payload`를 하면 함수 파라미터를 값으로 받을 수 있다!
+  - store.js  
+    ```js
+    dispatch(addAge(12))
+    ```
+  - cart.js
+    ```js
+    addAge(state, action) {
+      state = action.payload
+    },
+    ```
+
+### slice를 외부 파일로 빼내기
+- slice 코드가 길어지기 때문에 보통 파일을 빼서 import/export로 관리함!!
+  - personSlice.js
+    ```js
+    import { createSlice } from "@reduxjs/toolkit";
+
+    const person = createSlice({
+      name: "person",
+      initialState: {},
+      reducers: {
+        setPerson(state) {},
+        addAge(state, action) {}
+        ...
+      }
+    })
+
+    export let { setPerson, addAge } = person.actions
+    export default person
+    ```
+  - store.js
+    ```js
+    import person from './personSlice'
+    ...
+    export default configureStore(
+      {
+        reducer: {
+          person: person.reducer,
+        }
+      }
+    )
+    ```
+  - cart.js
+    ```js
+    import { addAge, setPerson } from "../store/personSlice"
+    ...
+    dispatch(setPerson())
+    ```
+
+### Redux Toolkit
+- 지금까지 배운 내용은 Redux가 아닌 Redux Toolkit에 대한 내용임
+- 둘 다 같은 개발자가 만든 것이고,
+- Redux Toolkit 사용이 권장됨
+- 기능은 동일하고 표현법이 약간 다름 (기존 Redux가 사용하기 어려웠음)
+
+### Redux Toolkit 정리!!
+- Redux Store & Slice 만들기
+  - 최상위 태그에 `<Provider store={store}>` 등록
+  - `store.js`에 `configureSlice()` 생성 (reducer)
+  - `createSlice()` 생성 (name, initialState, reducers)
+
+<br>
+
+- 값 가져다쓰기
+  1. `useSelector(state => state)`로 redux state 가져오기
+  2. reducer에 등록한 state에 접근해서 값 가져오기
+
+<br>
+
+- state 수정함수 만들기
+  1. 수정함수(action) 만들기
+    - 수정된 값을 return하거나, 직접 `state`를 수정
+    - `action.payload`를 통해 파라미터값 가져오기
+  2. export
+  3. 원하는 곳에서 import한 이후에
+  4. `useDispatch()`, `dispatch(수정함수())` 사용
+
+### Redux 상태가 살아있는 기간
+- 새로고침하거나 페이지가 아예 리로딩(리랜더링X)되면 **store가 초기화된다!!**
+- `redux-persist`를 사용하거나,
+- **Local Storage**를 사용해야 함!!
+
+<br>
+
+## 04. Local Storage
+
+### state가 유지되는 기간
+- 새로고침하거나 재접속하면 모든 state가 날아감!!
+- 이를 해결하기 위해,
+  1. 서버 DB에 정보를 저장
+  2. 브라우저 안에 있는 Local Storage에 저장!!
+    - 개발자 도구 → Application 탭 → Local Storage 탭

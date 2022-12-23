@@ -4,6 +4,8 @@ import { Nav } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Context1 } from '../App.js'
+import { addCart } from '../store/stocksSlice.js'
+import { useDispatch } from 'react-redux'
 
 
 
@@ -46,7 +48,8 @@ function Detail(props) {
       []
     )
 
-
+    // store.js에 요청 보내주는 것!
+    let dispatch = useDispatch()
 
     return (
       <div className={`${pageFade}`}>
@@ -72,7 +75,17 @@ function Detail(props) {
               <h4 className="pt-5">{target.title}</h4>
               <p>상품설명</p>
               <p>120000원</p>
-              <button className="btn btn-primary">주문하기</button>
+              <button className="btn btn-primary" onClick={
+                () => {
+                  dispatch(
+                    addCart({
+                      id,
+                      name: target.title,
+                      count: 0,
+                    })
+                  )
+                }
+              }>주문하기</button>
               <br/>
               <button className="btn btn-danger" onClick={ ()=>{
                   navigate(-1)

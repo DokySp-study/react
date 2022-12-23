@@ -16,7 +16,7 @@ export let Context1 = createContext()
 function App() {
   let [ shoesData, setShoesData ] = useState(data);
 
-  // context api로 상태관리ㅊㅌ
+  // context api로 상태관리
   let [ stock ] = useState([10, 11, 12])
 
 
@@ -37,6 +37,10 @@ function App() {
               <Nav.Link>
                 {" "}
                 <Link to="/detail">Detail</Link>{" "}
+              </Nav.Link>
+              <Nav.Link>
+                {" "}
+                <Link to="/cart">Cart</Link>{" "}
               </Nav.Link>
 
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
