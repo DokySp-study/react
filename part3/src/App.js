@@ -6,6 +6,7 @@ import { createContext, useState, useEffect } from "react";
 import { Link, Outlet, Route, Routes,  } from "react-router-dom";
 import axios from "axios";
 import Cart from "./pages/Cart";
+import { useQuery } from "react-query";
 
 
 // Context(state 바구니) 생성
@@ -25,7 +26,21 @@ function App() {
     if(localStorage.getItem('watched').length === 0)
       localStorage.setItem('watched', JSON.stringify([]))
   }, [])
-  
+
+
+  // 이렇게 가져올 수 있음
+  // axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+  //   console.log(a.data)
+  // })
+
+  // react-query!
+  // 성공/실패/로딩중인지 확인이 가능!!
+  let result = useQuery('queryKey', () => {
+    return axios.get("https://codingapple1.github.io/ㅁㄴㅇㄹ.json").then((a) => {
+      console.log('api 요청됨')
+      return a.data
+    })
+  }, { staleTime: 2000 })
 
 
   return (
@@ -65,6 +80,14 @@ function App() {
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
+
+          <Nav className="ms-auto">
+            {/* {(result.isLoading) ? `로딩중` : `반가워요 ${result.data.name}`} */}
+            { result.isLoading && '로딩중' }
+            { result.isError && '에러' }
+            { result.data && `반가워요 ${result.data.name}` }
+          </Nav>
+
         </Container>
       </Navbar>
 

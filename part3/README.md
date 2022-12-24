@@ -483,4 +483,114 @@
 <br>
 
 ## 05. React Query
+
+### 서버와 통신하는 코드 작성 시 고려할 점
+- AJAX 성공 및 실패 시 보여줄 HTML?
+- 일정 시간마다 AJAX 요청
+- 실패 시, 일정 시간 이후 다시 재요청?
+- 다음 페이지 내용을 미리 가져오기? (prefetch)
+- **이러한 기능들을 React Query로 쉽게 구현할 수 있음!!**
+  - 실시간 데이터를 지속적으로 사용하는 경우 유용함 (주식, 실시간 SNS 등)
+### 사용해보기! 
+- 페키지 설치
+  ```sh
+  $ npm install react-query
+  # 혹은
+  $ yarn add react-query
+  ```
+- index.js
+  ```js
+  // react-query 설정
+  import { QueryClient, QueryClientProvider } from 'react-query'
+  const queryClient = new QueryClient()
+  ...
+  root.render(
+    <QueryClientProvider client={queryClient}>
+      ...
+    </QueryClientProvider>
+  );
+  ```
+
+### 서버에서 정보 가져와보기
+- 코드
+  ```js
+  // react-query!
+  let result = useQuery('queryKey', () => {
+    return axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+      console.log('api 요청됨')
+      return a.data
+    })
+  })
+  ```
+
+### useQuery()
+- 실제 받아온 데이터: `data`
+- 상태 확인: `dataUpdatedAt`, `error`, `errorUpdateCount`, `errorUpdatedAt`, `failureCount`, `status`
+- 상태 확인(T/F): `isError`, `isFetched`, `isFetchedAfterMount`, `isFetching`, `isIdle`, `isLoading`, `isLoadingError`, `isPlaceholderData`, `isPreviousData`, `isRefetchError`, `isRefetching`, `isStale`, `isSuccess`
+- 함수 제공: `refetch`, `remove`
+
+### 실제 활용 예시
+- 이렇게 사용하면 state 관리 없이도 편하게 개발이 가능해진다!!
+  ```jsx
+  <Nav className="ms-auto">
+    {(result.isLoading) ? `로딩중` : `반가워요 ${result.data.name}`}
+  </Nav>
+  ```
+  ```jsx
+  <Nav className="ms-auto">
+    { result.isLoading && '로딩중' }
+    { result.isError && '에러' }
+    { result.data && `반가워요 ${result.data.name}` }
+  </Nav>
+  ```
+
+### refetch()
+- 브라우저 이외 다른 창 포커스 갔다가 다시오면
+- `api 요청됨` 로그 찍히는 것을 볼 수 있음!!
+- 자동으로 `refetch()` 기능을 동작시킴!!
+- `staleTime` 옵션주면, 2초 안에는 refetch가 되지 않음!
+  ```js
+  // react-query!
+  let result = useQuery('queryKey', () => {
+    return axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+      console.log('api 요청됨')
+      return a.data
+    })
+  }, { staleTime: 2000 })
+  ```
+- 실패 시 알아서 다시 데이터를 가져오려고 함 (3번 정도)
+  ```js
+  // react-query!
+  let result = useQuery('queryKey', () => {
+    return axios.get("https://codingapple1.github.io/알수없는경로.json").then((a) => {
+      console.log('api 요청됨')
+      return a.data
+    })
+  })
+  ```
+  ```
+  GET https://codingapple1.github.io/알수없는경로.json 404
+  GET https://codingapple1.github.io/알수없는경로.json 404
+  GET https://codingapple1.github.io/알수없는경로.json 404
+  GET https://codingapple1.github.io/알수없는경로.json 404
+  AxiosError {message: 'Request failed with status code 404' ...
+  ```
+
+### react-query state 공유
+- `App.js`, `Detail.js`에 각각 위에 이름을 요청하는 react-query 코드를 작성했다고 가정하면,
+- react-query가 알아서 한번에 묶어서 실행을 시켜준다!
+
+### react-query caching
+- 5분동안 AJAX 결과를 캐싱해둠!
+- 결과를 먼저 보여주고 AJAX 요청 후 최신 데이터를 가져옴!
+
+### RTK Query
+- Redux Toolkit Query
+- redux-toolkit 설치 시 자동으로 따라옴
+- 이거를 가져다가 비슷하게 구현이 가능은 함!
+- 그러나... 문법이 깨끗하지는 않음.
+
+<br>
+
+## 06. Lazy()
 - 작성중...
