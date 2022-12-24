@@ -2,7 +2,7 @@ import data from "./utils/data";
 import "./App.css";
 import Detail from "./pages/Detail";
 import { Nav, Navbar, Container, NavDropdown, Button } from "react-bootstrap";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { Link, Outlet, Route, Routes,  } from "react-router-dom";
 import axios from "axios";
 import Cart from "./pages/Cart";
@@ -20,27 +20,34 @@ function App() {
   let [ stock ] = useState([10, 11, 12])
 
 
+  // Local Stroage 초기화
+  useEffect(() => {
+    if(localStorage.getItem('watched').length === 0)
+      localStorage.setItem('watched', JSON.stringify([]))
+  }, [])
+  
+
+
   return (
     <div className="App">
       {/* 이렇게 사용하는 방법은 React-Bootstrap 방식임 */}
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">Emt Shop</Navbar.Brand>
+          <Link to='/'>
+            <Navbar.Brand href="#home">Emt Shop</Navbar.Brand>
+          </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               
               <Nav.Link>
-                {" "}
-                <Link to="/">Home</Link>{" "}
+                <Link to="/">Home</Link>
               </Nav.Link>
               <Nav.Link>
-                {" "}
-                <Link to="/detail">Detail</Link>{" "}
+                <Link to="/detail">Detail</Link>
               </Nav.Link>
               <Nav.Link>
-                {" "}
-                <Link to="/cart">Cart</Link>{" "}
+                <Link to="/cart">Cart</Link>
               </Nav.Link>
 
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
@@ -115,7 +122,7 @@ function App() {
         <div className="container">
           <div className="row">
             {shoesData.map((shoe, idx) => (
-              <Item key={idx} shoesData={shoe} imageIdx={idx + 1} />
+              <Item key={idx} id={shoe.id} shoesData={shoe} imageIdx={idx + 1} />
             ))}
           </div>
         </div>
@@ -139,11 +146,13 @@ function App() {
 function Item(props) {
   return (
     <div className="col-md-4">
-      <img
-        src={`https://codingapple1.github.io/shop/shoes${props.imageIdx}.jpg`}
-        width="100%"
-        alt=""
-      />
+      <Link to={`/detail/${props.id}`}>
+        <img
+          src={`https://codingapple1.github.io/shop/shoes${props.imageIdx}.jpg`}
+          width="100%"
+          alt=""
+        />
+      </Link>
       <h4>{props.shoesData.title}</h4>
       <p>{props.shoesData.content}</p>
       <p>{props.shoesData.price}</p>

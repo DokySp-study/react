@@ -28,7 +28,12 @@ function Detail(props) {
     let [pageFade, setPageFade] = useState('aniFO')
     let [alertFade, setAlertFade] = useState('aniFI')
 
-    
+    // 페이지 서서히 보이게 애니메이션
+    useEffect(() => {
+      setTimeout( () => setPageFade('aniFI'), 500 )
+    }, [])
+
+    // 페이지 애니메이션 관리
     useEffect( () => {
       setTimeout( () => {
         setAlertFade('aniFO')
@@ -41,12 +46,21 @@ function Detail(props) {
       }
     }, [])
 
-    useEffect(
-      () => {
-        setTimeout( () => setPageFade('aniFI'), 500 )
-      },
-      []
-    )
+    // Local Storage 추가
+    useEffect(() => {
+      const lockey = 'watched'
+      let watched = localStorage.getItem(lockey)
+      watched = JSON.parse(watched)
+      
+      // 맨 앞부터 가장 최근에 본 항목으로 업데이트
+      watched.unshift(target.id);
+      
+      // 중복제거
+      watched = new Set(watched)
+      watched = Array.from(watched)
+
+      localStorage.setItem(lockey, JSON.stringify(watched))
+    }, [])
 
     // store.js에 요청 보내주는 것!
     let dispatch = useDispatch()

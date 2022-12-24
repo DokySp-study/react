@@ -163,9 +163,11 @@
 <br>
 
 ## 03. 상태관리 (Redux)
-- 컴포넌트 간 state 공유
+- State 관리 라이브러리
+- 컴포넌트 간 state 공유 시 활용
 - `redux store.js` 안에 모든 state를 저장해두고 꺼내쓰는 느낌!
 - 정말 많이 쓰는 라이브러리
+  - `Jotai`, `Zustand` 등 다른 라이브러리들도 있음
 
 ### redux 설치하기
 - React18 이상
@@ -434,3 +436,51 @@
   1. 서버 DB에 정보를 저장
   2. 브라우저 안에 있는 Local Storage에 저장!!
     - 개발자 도구 → Application 탭 → Local Storage 탭
+
+### Local Stroage 저장 방식
+- key-value 형태
+- 문자만 저장 가능
+- 5MB 저장 가능
+- **사용자가 브라우저 청소 안하면 영구적으로 남게 됨!!**
+
+### Session Storage
+- 휘발성, 브라우저를 종료하면 데이터가 날라감!
+
+### Console창을 활용하여 Local Storage 사용해보기
+- 생성, 수정: `localStorage.setItem("key", "value")`
+- 값 가져오기: `localStorage.getItem("key")`
+- 삭제: `localStorage.removeItem()`
+- localStorage를 sessionStorage로 바꾸면 세션 스토리지 사용 가능!!
+- 단, **문자만 저장 가능!!**
+  - `localStorage.setItem("age", 23)`
+  - `localStorage.getItem("age")` → `'23'`
+
+### Local Storage에 object, array 저장하는 방법
+- 문자만 저장되기 때문에 아래와 같이 정상적으로 저장되지 않음  
+  ```js
+  let obj = {name: "kim"}
+  localStorage.setItem("key", obj)
+  localStorage.getItem("key")
+  ```
+  ```js
+  '[object Object]'
+  ```
+- 따라서 JSON을 활용!
+  - js → string: `JSON.stringify()`
+    ```js
+    let obj = {name: "kim"}
+    localStorage.setItem("key", JSON.stringify(obj))
+    localStorage.getItem("key")
+    ```
+    ```js
+    '{"name":"kim"}'
+    ```
+  - js → string: `JSON.parse()`
+    ```js
+    JSON.parse(localStorage.getItem("key"))
+    ```
+
+<br>
+
+## 05. React Query
+- 작성중...
