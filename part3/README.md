@@ -760,5 +760,66 @@
 
 <br>
 
-### 07. Progressive Web App
+## 07. Progressive Web App
+
+### PWA
+- 설치가 가능한, 앱처럼 보이게하는 웹페이지
+
+### PWA 장점
+- 앱으로써의 기능을 손쉽게 구현이 가능함
+- PWA 기술을 활용하면 센서, 푸시알림 등의 기능도 활용이 가능
+
+### PWA 만들어보기
+- 프로젝트 생성 시, 템플릿을 적용해야 함
+  ```bash
+  $ npx create-react-app 앱이름 --template cra-template-pwa
+  ```
+- 그게 아니라면 아래 글을 참고
+  - [https://kwanghyuk.tistory.com/200](https://kwanghyuk.tistory.com/200)
+
+### PWA 설정하기
+- 2개의 파일을 생성해야 함
+  1. `./public/manifest.json`: 앱 정보
+    - 이름, 플랫폼별 아이콘, start_url(첫 페이지 경로), display(상단바 유무), 각종 색상 등
+    - ![PWA Splash Image](https://miro.medium.com/max/1400/1*k07wulFO297SXn7EZ-Xaow.png)
+  2. `./src/service-worker.js`
+    - `./src/index.js`에서 `serviceWorkerRegistration.unregister()`를 `register()`로 변경
+    - 오프라인 동작 가능 및 빠른 로딩을 지원
+      - 일반 앱은 리소스가 휴대폰에 설치되어있기 때문에 오프라인 상태여도 구동이 가능함
+      - 웹사이트는 오프라인인 경우 에러 메시지만 보임
+      - 웹사이트에 필요한 html, css, js 파일을 휴대폰에 미리 다운로드 시켜주는 역할!
+      - `./build/asset-manifest.json`에 저장할 파일 목록이 적혀있음!
+    - 빌드 시 `service-worker.js`가 생성됨! (minify된 파일)
+    - `$ npm run build` 혹은 `$ yarn build`
+- 위에 2개의 파일이 존재하면 사이트 접속 시 브라우저가 PWA 사이트로 인식하고
+- 알아서 PWA 설치 안내 팝업을 브라우저가 띄움
+
+### PWA 테스트해보기
+- 빌드된 사이트가 있는 폴더에서 `live-server` 구동하면 확인 가능!
+- 개발자도구 → Application 들어가면 manifest 등 PWA 관련 설정들을 볼 수 있음
+  - Cache Storage: 오프라인에서도 동작 가능하도록 저장해둔 파일들!
+
+### PWA Caching 예외 지정하기
+- `./node-modules/react-script/config/webpack.config.js`
+- `new WorkboxWebpackPlugin.InjectManifest()`에서 `exclude`에 제외할 파일이름 혹은 정규식을 추가
+
+### 설치 안내화면 만들어보기
+```markdown
+강제로 prompt 띄우는 코드는 다음과 같습니다 
+https://web.dev/customize-install/
+
+근데 그래도 안뜰 때도 있어서 HTML로 설치버튼 UI를 만들어주는 것도 좋은 방법입니다 
+https://dev.to/woile/simplest-react-hook-component-for-pwa-install-button-2die
+버튼 컴포넌트로 설치팝업 띄워주는 방법같습니다. 
+
+그리고 원래 아이폰 아이패드같은 iOS에선 팝업 안뜰걸요
+https://github.com/chrisdancee/react-ios-pwa-prompt
+커스텀 UI로 팝업띄우는거 라이브러리로 누가 만들어놨네요 설치하면 코드한줄 컷인가봅니다 
+
+Writted by CodingApple
+```
+
+<br>
+
+## 08. Node.js와 연동해보기
 - 작성중...
