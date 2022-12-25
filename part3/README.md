@@ -781,7 +781,11 @@
 - 2개의 파일을 생성해야 함
   1. `./public/manifest.json`: 앱 정보
     - 이름, 플랫폼별 아이콘, start_url(첫 페이지 경로), display(상단바 유무), 각종 색상 등
-    - ![PWA Splash Image](https://miro.medium.com/max/1400/1*k07wulFO297SXn7EZ-Xaow.png)
+
+  <p>
+    <img width=320 alt="PWA Splash Image" src=https://miro.medium.com/max/1400/1*k07wulFO297SXn7EZ-Xaow.png>
+  </p>
+
   2. `./src/service-worker.js`
     - `./src/index.js`에서 `serviceWorkerRegistration.unregister()`를 `register()`로 변경
     - 오프라인 동작 가능 및 빠른 로딩을 지원
@@ -883,3 +887,21 @@ app.use(cors())
 - 쉽게 설명하면, **특정 서버가 타 서버의 정보를 활용하는 것을 말함!**
 - CORS Error: 타 서버가 내 정보를 활용하는 것을 허용하지 않았을 때 발생하는 에러
   - 위의 코드를 작성하여 타 서버와의 공유를 허용하는 것!
+
+### 서브디렉토리에 React 앱 배포하고 싶은 경우
+```js
+app.get('/', (req, res) => { 
+  res.sendFile(path.join(__dirname, 'public/index.html'))
+})
+
+app.get('/subdir', (req, res) => { 
+  res.sendFile(path.join(__dirname, '리엑트 빌드된 파일 경로'))
+})
+```
+```json
+// react 프로젝트 내 package.json
+{
+  "homepage": "/subdir"
+  ...
+}
+```
