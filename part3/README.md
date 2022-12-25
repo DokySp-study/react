@@ -822,4 +822,64 @@ Writted by CodingApple
 <br>
 
 ## 08. Node.js와 연동해보기
-- 작성중...
+
+### 서버의 역할
+- 사용자가 요청 시, HTML 파일을 보내줌
+  - React, Vue, Angular, Svelte 등등 전부 **HTML 꾸미기 프레임워크에 불과함!**
+  - 따라서 빌드된 사이트를 그저 백엔드 프로그램에 붙여넣으면 됨!
+
+### 서버에 리엑트 페이지 붙여보기
+
+#### 1. node.js 서버 제작
+1. `server.js` 파일 제작
+  ```js
+  const exress = required('express)
+  const app = express()
+  const path = required('path)
+  app.listen(8080, () => { console.log('listening on 8080') })
+  ``` 
+2. `npm init -y`
+3. `npm install express`
+
+#### 2. React 프로젝트 빌드
+1. `$ npm run build` 혹은 `$ yarn build`
+2. 생성된 `./build` 폴더 안에 파일들이 윂페이지 파일들임!
+
+#### 3. 서버에 리엑트 합치기
+1. 빌드된 리엑트 프로젝트 위치를 static으로 지정
+  ```js
+  app.use(express.static( path.join(__dirname, '리엑트 빌드된 파일 경로') ))
+  ```  
+2. node.js에서 라우팅 생성 (express 기준)
+  ```js
+  app.get('/', (req, res) => { 
+    res.sendFile(path.join(__dirname, '리엑트 빌드된 파일 경로'))
+  })
+  ``` 
+- 혹은 `/public` 폴더 내용을 지우고 리엑트로 빌드한 파일들로 덮어씌워도 됨!
+
+### 라우팅?
+- 백엔드도 프론트엔드도 라우팅 처리를 한 경우, 별도의 설정이 없으면 백엔드 설정이 먼저다.
+- 따라서, `/detail/2` 또는 `/cart` 입력 시, **없는 페이지라고 뜬다.**
+- 모든 라우팅을 리엑트에서 처리하게 하려면 아래와 같은 코드를 라우팅 최하단에 추가해주어야 함!
+  ```js
+  app.get("*", path.join(__dirname, '리엑트 빌드된 파일 경로'))
+  ```
+
+### 랜더링 주체
+1. `Server-Side Rendering`: DB 정보를 서버에서 가져옴 → HTML로 가공 → 사용자에게 전달
+2. `Client-Side Rendering`: DB 정보를 서버에서 가져옴 → 사용자에게 전달 → React가 가공해서 사용자에게 보여줌
+
+### Cross-Origin Resource Sharing
+```bash
+$ npm install cors
+# 또는
+$ yarn add cors
+```
+```js
+let cors = required('cors')
+app.use(cors())
+```
+- 쉽게 설명하면, **특정 서버가 타 서버의 정보를 활용하는 것을 말함!**
+- CORS Error: 타 서버가 내 정보를 활용하는 것을 허용하지 않았을 때 발생하는 에러
+  - 위의 코드를 작성하여 타 서버와의 공유를 허용하는 것!
