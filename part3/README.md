@@ -592,5 +592,173 @@
 
 <br>
 
-## 06. Lazy()
+## 06. 최적화 & 성능향상/개선
+
+### React Developer Tools
+- 구글 크롬 웹스토어에서 설치 가능
+- Components
+  - 컴포넌트 단위로 UI 확인이 가능함!
+  - 각 컴포넌트의 props, state 등을 확인할 수 있음!
+- Profiler
+  - 각 컴포넌트 별 렌더링 시간을 보여줌
+  - 성능 저하를 일으키는 컴포넌트를 찾아볼 수 있음!
+  - 참고: 성능 지연의 주요 원인은 AJAX
+  
+### Redux DevTools
+- 구글 크롬 웹스토어에서 설치 가능
+- Redux 내의 변경사항을 볼 수 있음!!
+
+### lazy()
+- 리엑트는 SPA 컨셉을 가짐!
+- 즉, 배포 시, 하나의 JS 파일에 모든 코드 및 컴포넌트가 들어가게 됨!
+- 따라서, 한번에 매우 큰 JS, CSS, HTML 파일을 로드해야 사용자가 사용이 가능해짐. (로딩 전까지는 흰 화면)
+- `react`에서 제공하는 `lazy()`를 활용하면 필요할 때 해당 컴포넌트를 로딩하게 됨!
+  - 또한 빌드 시, JS파일도 별도로 분리됨!
+  ```js
+  // import Detail from "./pages/Detail";
+  // import Cart from "./pages/Cart";
+
+  const Detail = lazy(() => import('./pages/Detail'))
+  const Cart = lazy(() => import('./pages/Cart'))
+  ``` 
+- 단, 해당 컴포넌트 로딩이 지연되어 흰 화면이 뜰 수 있음!
+  - `react`의 `<Suspense>` 태그를 활용하여 로딩 페이지를 따로 만들 수 있음!
+  ```jsx
+  <Suspense fallback={<div>로딩중...</div>}>
+    <Routes>
+      <Route path="/" element={ <MainPage/> }/>
+      <Route path="/cart" element={<Cart/>}/>
+      ...
+      <Route path="*" element={ <>없는 페이지입니다.</> } />
+    </Routes>
+  </Suspense>
+  ```
+
+### memo()
+- 자식 컴포넌트의 재랜더링을 방지할 때 사용하는 방법
+- `memo()`를 씌어둔 컴포넌트는 꼭 필요한 경우가 아니라면 리랜더링하지 않음!
+  ```jsx
+  const Child = memo(function() {
+    console.log("재랜더링됨")
+    return <div>자식</div>
+  })
+
+  function Cart() {
+    let [count, setCount] = useState(0)
+
+    return (
+      <div>
+        <Child></Child>
+        <button onClick={() => { setCount(count+1) }}>+</button>
+      </div>
+  }
+  ```
+  - `memo()`를 씌우지 않은 경우, 
+    - 부모에서 count state 변경 시마다 '재랜더링됨' 로그 띄움
+  - `memo()`를 씌운 경우,
+    - 부모에서 count state 변경해도 '재랜더링됨' 로그가 안뜸!!
+
+#### memo()의 정확한 원리
+- 특정 상황에서만 리랜더링을 해줌
+  - **props가 변경될 때에만 리랜더링!!**
+    ```jsx
+    <Child count={count}></Child>
+    ```
+  - 이렇게 작성하면 '재랜더링됨' 로그 띄움!!
+- 즉, 기존 props와 새로운 props를 비교한 이후에 리랜더링을 함
+  - props가 크면 클수록 효율이 떨어짐!!
+
+### useMemo() (? 잘 모르겠음)
+- useEffect와 유사
+  - useEffect: 랜더링 이후 동작
+  - useMemo: 랜더링과 함께 동작
+  ```jsx
+  function hardWorks() {
+    let i = 0
+    for(i=0; i < 1e9; i++) continue
+    return i
+  }
+
+  function Cart() {
+    // 처음 실행될 때에만 실행
+    let result = useMemo(() => {
+      return hardWorks()
+    }, [])
+
+    let result2 = useMemo(() => {
+      return hardWorks()
+    }, [감시할_state])
+  }
+  ```
+  - [https://whales.tistory.com/87](https://whales.tistory.com/87)
+
+### Automatic Batching (React18)
+- 여러 개의 state 변경이 동시에 일어날 시, 재랜더링이 딱 한번만 일어남!
+- AJAX, setTimeout → 동작에 지연이 발생하는 코드들
+  - 이것들도 18 버전부터 Automatic Batching 동작함
+
+### useTransition() (React18)
+- 동작이 느린 컴포넌트 성능을 향상시킴!
+- 브라우저 → 한번에 하나씩 작업할 수 밖에 없음
+  1. 타이핑한 텍스트를 input box에 표시하기
+  2. `<div>`를 10,000개 만들기
+  ```jsx
+  import { useState, useTransition } from "react";
+
+  function Test() {
+    let [name, setName] = useState('')
+    let arr = new Array(10000).fill(0)
+    let [isPending, startTransition] = useTransition()
+
+    return (
+      <div>
+        <input onChange={(e) => 
+          startTransition(() => {
+            setName(e.target.value)
+          })
+        }/>
+        { isPending ? "✴️" : "✅" }
+        {
+          arr.map(() => <div>{name}</div>)
+        }
+      </div>
+    )
+  }
+
+  export default Test
+  ```
+- `startTransition()`
+  - 이 안에 있는 코드를 늦게 실행함!
+  - 다른 중요한 작업들을 먼저 처리하게 됨!
+  - 따라서, 1번 작업을 먼저 수행하고 10,000개를 만들게 됨!
+- `isPending`
+  - `startTransition()` 처리 중일 때 true!
+
+### useDeferredValue() (React18)
+- 변동 사항이 생겼을 시, 지정한 state가 늦게 처리됨!
+- useTransition과 동작은 비슷하게 처리됨!
+  ```jsx
+  import { useDeferredValue, useState } from "react";
+
+  function Test() {
+    let [name, setName] = useState('')
+    let arr = new Array(10000).fill(0)
+
+    // 변동 사항이 생겼을 시, state가 늦게 처리됨!
+    let state = useDeferredValue(name)
+
+    return (
+      <div>
+        <input onChange={(e) => setName(e.target.value)}/>
+        { arr.map(() => <div>{state}</div>) }
+      </div>
+    )
+  }
+
+  export default Test
+  ```
+
+<br>
+
+### 07. Progressive Web App
 - 작성중...

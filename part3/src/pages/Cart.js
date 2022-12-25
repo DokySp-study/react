@@ -2,9 +2,28 @@ import { Table } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { addAge } from "../store/personSlice"
 import { addCount } from "../store/stocksSlice"
+import { memo, useMemo, useState } from "react"
 
+
+
+const Child = memo(function() {
+  console.log("재랜더링됨")
+  return <div>자식</div>
+})
+
+function hardWorks() {
+  let i = 0
+  for(i=0; i < 1e9; i++) continue
+  return i
+}
 
 function Cart() {
+
+  // 처음 실행될 때에만 실행
+  // useEffect와 유사
+  let result = useMemo(() => {
+    return hardWorks()
+  },[])
   
   // store에 있는 state 가져옴
   // let data = useSelector(
@@ -19,9 +38,13 @@ function Cart() {
   // store.js에 요청 보내주는 것!
   let dispatch = useDispatch()
 
+  let [count, setCount] = useState(0)
 
   return (
     <div>
+
+      <Child count={count}></Child>
+      <button onClick={() => { setCount(count+1) }}>+</button>
 
       <h6>{ state.user }의 장바구니</h6>
       <h6>{state.person.name} / {state.person.age}</h6>

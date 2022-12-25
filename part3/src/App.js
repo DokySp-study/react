@@ -1,13 +1,17 @@
 import data from "./utils/data";
 import "./App.css";
-import Detail from "./pages/Detail";
 import { Nav, Navbar, Container, NavDropdown, Button } from "react-bootstrap";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, lazy, Suspense } from "react";
 import { Link, Outlet, Route, Routes,  } from "react-router-dom";
 import axios from "axios";
-import Cart from "./pages/Cart";
 import { useQuery } from "react-query";
 
+// import Detail from "./pages/Detail";
+// import Cart from "./pages/Cart";
+
+const Detail = lazy(() => import('./pages/Detail'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Test = lazy(() => import('./pages/Test'))
 
 // Context(state 바구니) 생성
 export let Context1 = createContext()
@@ -91,37 +95,44 @@ function App() {
         </Container>
       </Navbar>
 
-      <Routes>
-        <Route path="/" element={ <MainPage/> }/>
-        
-        {/* <Route path="/detail/:id" element={ 
-          <Context1.Provider 
-            value={
-              {stock, shoesData}
-            }>
-            <Detail/> 
-          </Context1.Provider>
-        }/> */}
 
-        <Route path="/detail/:id" element={           
-          <Detail shoesData={ shoesData }/> 
-        }/>
+      <Suspense fallback={<div>로딩중...</div>}>
+        <Routes>
+          <Route path="/" element={ <MainPage/> }/>
+          
+          {/* <Route path="/detail/:id" element={ 
+            <Context1.Provider 
+              value={
+                {stock, shoesData}
+              }>
+              <Detail/> 
+            </Context1.Provider>
+          }/> */}
 
-        <Route path="about" element={
-          <>
-            어바웃페이지<br/>
-            <Outlet/>
-          </>}>
-          <Route path="member" element={ <>구성원</> } />
-          <Route path="location" element={ <>위치정보</> } />
-        </Route>
+          <Route path="/detail/:id" element={           
+            <Detail shoesData={ shoesData }/> 
+          }/>
 
-        <Route path="/cart" element={
-          <Cart/>
-        } />
-        
-        <Route path="*" element={ <>없는 페이지입니다.</> } />
-      </Routes>
+          <Route path="about" element={
+            <>
+              어바웃페이지<br/>
+              <Outlet/>
+            </>}>
+            <Route path="member" element={ <>구성원</> } />
+            <Route path="location" element={ <>위치정보</> } />
+          </Route>
+
+          <Route path="/cart" element={
+            <Cart/>
+          } />
+
+          <Route path="/test" element={
+            <Test/>
+          } />
+          
+          <Route path="*" element={ <>없는 페이지입니다.</> } />
+        </Routes>
+      </Suspense>
 
     </div>
   );
